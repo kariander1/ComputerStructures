@@ -5,7 +5,10 @@
 #include <stdio.h>
 
 enum ReturnStatus {SUCCESS = 0, FAILURE = -1};
-enum Bimodal {SNT = 0, WNT, WT, ST};
+enum Bimodal {MIN=-1 , SNT = 0, WNT, WT, ST , MAX};
+class BP;
+class BHR;
+
 class BHR {
 public:
     static bool isGlobalHist;
@@ -18,6 +21,7 @@ public:
     BHR(unsigned historySize, unsigned tagSize, unsigned  fsmState) : fsm(new Bimodal[1<<historySize]) {
         for(int i = 0; i < 1 << historySize ; i++) {
             fsm[i] = static_cast<Bimodal>(fsmState);
+            
         }
 
     }
@@ -40,15 +44,16 @@ public:
 
 int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned fsmState,
 			bool isGlobalHist, bool isGlobalTable, int Shared) {
-//	BP::btbSize = btbSize;
-//	BP::historySize = historySize;
-//	BP::tagSize = tagSize;
-//	BP::fsmState = fsmState;
-//	BP::isGlobalHist = isGlobalHist;
-//	BP::isGlobalTable = isGlobalTable;
-//	BP::Shared = Shared;
+				/*
+	BP::btbSize = btbSize;
+	BP::historySize = historySize;
+	BP::tagSize = tagSize;
+	BP::fsmState = fsmState;
+	BP::isGlobalHist = isGlobalHist;
+	BP::isGlobalTable = isGlobalTable;
+	BP::Shared = Shared;
 
-
+*/
 
 
 	return SUCCESS;
