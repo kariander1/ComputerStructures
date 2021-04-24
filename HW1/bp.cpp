@@ -14,15 +14,20 @@ public:
     static bool isGlobalHist;
     static bool isGlobalTable;
     static int Shared;
+    bool valid;
     unsigned tag;
     unsigned target;
     unsigned local_history;
     Bimodal * fsm;
-    BHR(unsigned historySize, unsigned tagSize, unsigned  fsmState) : fsm(new Bimodal[1<<historySize]) {
+    BHR(unsigned historySize, unsigned  fsmState) : fsm(new Bimodal[1<<historySize]), valid(false), local_history(0) {
         for(int i = 0; i < 1 << historySize ; i++) {
-            fsm[i] = static_cast<Bimodal>(fsmState);
-            
+            Bimodal default_bimodal_val = static_cast<Bimodal>(fsmState);
+            if (default_bimodal_val <= MIN || default_bimodal_val >= MAX) {
+                throw;
+            }
+            fsm[i] = default_bimodal_val;
         }
+
 
     }
     BHR(const BHR & bhr) {}
@@ -39,12 +44,12 @@ public:
     static bool isGlobalHist;
     static bool isGlobalTable;
     static int Shared;
+    static BHR * BTB;
 };
 
 
 int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned fsmState,
 			bool isGlobalHist, bool isGlobalTable, int Shared) {
-				/*
 	BP::btbSize = btbSize;
 	BP::historySize = historySize;
 	BP::tagSize = tagSize;
@@ -52,8 +57,11 @@ int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned f
 	BP::isGlobalHist = isGlobalHist;
 	BP::isGlobalTable = isGlobalTable;
 	BP::Shared = Shared;
+     try{
+         BP::BTB = new BHR[btbSize];
+     } catch(...) {
 
-*/
+     }
 
 
 	return SUCCESS;
