@@ -4,3 +4,6 @@
 CMakeFiles/bp.dir/bp_main.c.o: ../bp_api.h
 CMakeFiles/bp.dir/bp_main.c.o: ../bp_main.c
 
+CMakeFiles/bp.dir/bp.cpp.o: ../bp.cpp
+CMakeFiles/bp.dir/bp.cpp.o: ../bp_api.h
+

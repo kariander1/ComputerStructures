@@ -4,7 +4,7 @@ project(bp VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-add_executable(bp bp_main.c)
+add_executable(bp bp_main.c bp.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
