@@ -14,12 +14,14 @@ public:
     static bool isGlobalHist;
     static bool isGlobalTable;
     static int Shared;
+    static unsigned historySize;
+    static unsigned fsmState;
     bool valid;
     unsigned tag;
     unsigned target;
     unsigned local_history;
     Bimodal * fsm;
-    BHR(unsigned historySize, unsigned  fsmState) : fsm(new Bimodal[1<<historySize]), valid(false), local_history(0) {
+    BHR() : fsm(new Bimodal[1<<historySize]), valid(false), local_history(0) {
         for(int i = 0; i < 1 << historySize ; i++) {
             Bimodal default_bimodal_val = static_cast<Bimodal>(fsmState);
             if (default_bimodal_val <= MIN || default_bimodal_val >= MAX) {
@@ -30,9 +32,9 @@ public:
 
 
     }
-    BHR(const BHR & bhr) {}
-    BHR & operator=(const BHR & bhr) {}
-    ~BHR() {}
+    BHR(const BHR & bhr) = delete;
+    BHR & operator=(const BHR & bhr) = delete;
+    ~BHR() = default;
 };
 
 class BP {
@@ -58,6 +60,8 @@ int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned f
 	BP::isGlobalTable = isGlobalTable;
 	BP::Shared = Shared;
      try{
+         BHR::historySize = historySize;
+         BHR::fsmState = fsmState;
          BP::BTB = new BHR[btbSize];
      } catch(...) {
 
@@ -66,11 +70,12 @@ int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned f
 
 	return SUCCESS;
 }
-
+/** Lior */
 bool BP_predict(uint32_t pc, uint32_t *dst){
 	return false;
 }
 
+ /** Shai Haim Yehezkel */
 void BP_update(uint32_t pc, uint32_t targetPc, bool taken, uint32_t pred_dst){
 	return;
 }
