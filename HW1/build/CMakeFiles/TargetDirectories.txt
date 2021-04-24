@@ -1,5 +1,5 @@
-/home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/edit_cache.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/rebuild_cache.dir
+/home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/edit_cache.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/bp.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/ContinuousSubmit.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/ContinuousCoverage.dir
@@ -10,8 +10,8 @@
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/package.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyTest.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyUpdate.dir
-/home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/Continuous.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyBuild.dir
+/home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/Continuous.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyStart.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyMemoryCheck.dir
 /home/compm/Desktop/ComputerStructures/HW1/build/CMakeFiles/NightlyMemCheck.dir

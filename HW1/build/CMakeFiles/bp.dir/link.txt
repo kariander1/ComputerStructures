@@ -1,1 +1,1 @@
-/usr/bin/x86_64-linux-gnu-g++-5   -g   CMakeFiles/bp.dir/bp_main.c.o CMakeFiles/bp.dir/bp.cpp.o  -o bp -rdynamic 
+/usr/bin/x86_64-linux-gnu-g++-5 -g -rdynamic CMakeFiles/bp.dir/bp_main.c.o CMakeFiles/bp.dir/bp.cpp.o -o bp 
