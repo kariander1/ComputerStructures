@@ -21,9 +21,9 @@ public:
         }
 
     }
-    BHR(const BHR & bhr) = delete;
-    BHR & operator=(const BHR & bhr) = delete;
-    ~BHR() = default;
+    BHR(const BHR & bhr) {}
+    BHR & operator=(const BHR & bhr) {}
+    ~BHR() {}
 };
 
 class BP {
@@ -40,13 +40,13 @@ public:
 
 int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned fsmState,
 			bool isGlobalHist, bool isGlobalTable, int Shared) {
-	BP::btbSize = btbSize;
-	BP::historySize = historySize;
-	BP::tagSize = tagSize;
-	BP::fsmState = fsmState;
-	BP::isGlobalHist = isGlobalHist;
-	BP::isGlobalTable = isGlobalTable;
-	BP::Shared = Shared;
+//	BP::btbSize = btbSize;
+//	BP::historySize = historySize;
+//	BP::tagSize = tagSize;
+//	BP::fsmState = fsmState;
+//	BP::isGlobalHist = isGlobalHist;
+//	BP::isGlobalTable = isGlobalTable;
+//	BP::Shared = Shared;
 
 
 
