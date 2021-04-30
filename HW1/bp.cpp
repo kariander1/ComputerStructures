@@ -188,11 +188,11 @@ public:
         unsigned int history_mask = (1<<(historySize+1)) - 1;
         uint32_t masked_pc = pc;
         if(Shared == USING_SHARE_LSB) {
-            // XOR of history with pc from 3rd bit
+            // XOR of history with pc from bit 2
             masked_pc = masked_pc >> 2;
         }
         else { // Shared == USING_SHARE_MID
-            // XOR of history with pc from 16th bit
+            // XOR of history with pc from bit 16
             masked_pc = masked_pc >> 16;
         }
         // Sample (history size) amount of bits from pc and perform XOR with history
