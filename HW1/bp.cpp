@@ -10,17 +10,20 @@ enum ReturnStatus
     SUCCESS = 0,
     FAILURE = -1
 };
+
+enum BimodalState
+{
+    BIMODAL_MIN = -1,
+    SNT = 0,
+    WNT,
+    WT,
+    ST,
+    BIMODAL_MAX
+};
+
+// Finite state machine for branch prediction.
 class BimodalFSM_p
 {
-    enum BimodalState
-    {
-        BIMODAL_MIN = -1,
-        SNT = 0,
-        WNT,
-        WT,
-        ST,
-        BIMODAL_MAX
-    };
     BimodalState default_state;
     BimodalState state;
 
@@ -36,13 +39,17 @@ public:
     {
         state = default_state;
     }
+    BimodalState getState() {
+        return state;
+    }
 };
 typedef struct BimodalFSM_p *BimodalFSM;
 
+// Branch History Register. For history only.
 class BHR
 {
-    unsigned int history_record;
-    unsigned int history_mask;
+    unsigned int history_record; // History
+    unsigned int history_mask;   // Mask for keeping history in correct size
 
 public:
     BHR(const unsigned &historySize) : history_mask((1 << historySize)-1) {}
@@ -60,6 +67,13 @@ public:
     }
 };
 
+// An entry in the BTB table.
+// Encapsulates:
+// - Tag of branch
+// - Target to jump to in case of taken
+// - Valid bit
+// - Prediction history
+// - prediction FSM machine
 class BTBentry_p
 {
 public:
@@ -67,14 +81,14 @@ public:
     unsigned tag;
     unsigned target;
     BHR localBHR;
-    BimodalFSM *fsm;
+    BimodalFSM ** fsm;
     unsigned int num_of_fsm;
     BTBentry_p(const unsigned &historySize,const unsigned &fsmState) : valid(false), num_of_fsm(1 << historySize), localBHR(historySize)
     {
-        fsm = new BimodalFSM[1 << historySize];
+        *fsm = new BimodalFSM[1 << historySize];
         for (size_t i = 0; i < num_of_fsm; i++)
         {
-            fsm[i] =new BimodalFSM_p(fsmState);
+            (*fsm)[i] =new BimodalFSM_p(fsmState);
         }
         
     }
@@ -100,19 +114,21 @@ public:
     */
 };
 typedef struct BTBentry_p *BTBentry;
+
+// Full prediction table
 class BTB
 {
 
 private:
     unsigned btbSize;
     unsigned tagSize;
-    unsigned index_mask;
+    unsigned index_mask;  // For calculating tag
     unsigned fsmState;
     BHR publicBHR;
-    BimodalFSM_p sharedTable;
+    BimodalFSM ** sharedTable;
     bool isGlobalHist;
     bool isGlobalTable;
-    BTBentry *entires;
+    BTBentry *entries;
 
 public:
     BTB(const unsigned &btbSize,
@@ -126,30 +142,36 @@ public:
           index_mask((1<<(32-2-tagSize))-1),
           fsmState(fsm_state),
           publicBHR(historySize),
-          sharedTable(BimodalFSM_p(fsm_state)),
           isGlobalHist(isGlobalHist),
           isGlobalTable(isGlobalTable)
     {
-        entires = new BTBentry[btbSize]; // Allocate array of entries
+        entries = new BTBentry[btbSize]; // Allocate array of entries
         for (size_t i = 0; i < btbSize; i++)
         {
             // Allocate each entry
-            entires[i] = new BTBentry_p(historySize,fsm_state);
+            entries[i] = new BTBentry_p(historySize,fsm_state);
+        }
+        // Initialize Global FSM Table with default value
+        unsigned int num_of_fsm = 1 << historySize;
+        *sharedTable = new BimodalFSM[num_of_fsm];
+        for (size_t i = 0; i < num_of_fsm; i++)
+        {
+            (*sharedTable)[i] =new BimodalFSM_p(fsmState);
         }
     }
     ~BTB()
     {
-        delete[] entires;
+        delete[] entries;
     }
     void update(const uint32_t &pc,const uint32_t &targetPc, const bool &taken, uint32_t pred_dst)
     {
         // Update global & shared:
         const bool correct_pred = (targetPc == pred_dst);
         this->publicBHR.update(correct_pred);
-        this->sharedTable.update(correct_pred);
+        (*this->sharedTable)[0]->update(correct_pred);
 
         const unsigned index = ((pc >> 2) & index_mask) % btbSize;
-        BTBentry entry = this->entires[index];
+        BTBentry entry = this->entries[index];
         const unsigned int tag_mask =((1 << tagSize) - 1);
         const unsigned int current_tag = (pc >> (2 + (int)log2(btbSize))) & tag_mask;
         if (!entry->valid || entry->tag != current_tag)
@@ -159,14 +181,38 @@ public:
             entry->localBHR = 0;
             for (int i = 0; i < entry->num_of_fsm; i++)
             {
-                entry->fsm[i]->reset();
+                (*entry->fsm)[i]->reset();
             }            
         }
         // Now entry is the relevant branch
       
         entry->localBHR.update(correct_pred);
-        entry->fsm[entry->localBHR.getHistory()]->update(correct_pred);
+        (*entry->fsm)[entry->localBHR.getHistory()]->update(correct_pred);
         entry->valid = true; // Always set this
+    }
+    // Predicts branch conclusion based on tag's history in Fetch stage
+    bool predict(const uint32_t pc, uint32_t * dst) {
+        // Convert pc to tag
+        const unsigned index = ((pc >> 2) & index_mask) % btbSize;
+        // Load BHR with tag's index
+        BTBentry entry = this->entries[index];
+        if(entry->valid) {
+            // tag exists
+
+            // Load local/global history and FSM table according to BTB flags
+            unsigned int history_index = isGlobalHist ?  publicBHR.getHistory() : entry->localBHR.getHistory();
+            BimodalFSM ** fsm_table = isGlobalTable ? sharedTable : entry->fsm;
+            // Load branch prediction from Bipodal FSM
+            BimodalState bi_state = (*fsm_table)[history_index]->getState();
+            if(bi_state == WT || bi_state == ST) {
+                // Branch taken
+                *dst = entry->target;
+                return true;
+            }
+        }
+        // Branch not taken OR no corresponding tag
+        *dst = pc + 4;
+        return false;
     }
 };
 
