@@ -21,6 +21,12 @@ enum BimodalState
     BIMODAL_MAX
 };
 
+enum ShareStatus {
+    NOT_USING_SHARE = 0,
+    USING_SHARE_LSB = 1,
+    USING_SHARE_MID = 2
+};
+
 // Finite state machine for branch prediction.
 class BimodalFSM_p
 {
@@ -121,6 +127,7 @@ class BTB
 
 private:
     unsigned btbSize;
+    unsigned historySize;
     unsigned tagSize;
     unsigned index_mask;  // For calculating tag
     unsigned fsmState;
@@ -129,6 +136,7 @@ private:
     bool isGlobalHist;
     bool isGlobalTable;
     BTBentry *entries;
+    int Shared;
 
 public:
     BTB(const unsigned &btbSize,
@@ -136,14 +144,17 @@ public:
         const unsigned &tagSize,
         const unsigned &fsm_state,
         const bool &isGlobalHist,
-        const bool &isGlobalTable)
+        const bool &isGlobalTable,
+        const int &Shared)
         : btbSize(btbSize),
+          historySize(historySize),
           tagSize(tagSize),
           index_mask((1<<(32-2-tagSize))-1),
           fsmState(fsm_state),
           publicBHR(historySize),
           isGlobalHist(isGlobalHist),
-          isGlobalTable(isGlobalTable)
+          isGlobalTable(isGlobalTable),
+          Shared(Shared)
     {
         entries = new BTBentry[btbSize]; // Allocate array of entries
         for (size_t i = 0; i < btbSize; i++)
@@ -159,10 +170,35 @@ public:
             (*sharedTable)[i] =new BimodalFSM_p(fsmState);
         }
     }
+
     ~BTB()
     {
         delete[] entries;
     }
+
+    /**
+     * returns history masked according to type of SHARE
+     */
+    unsigned int getSharedHistory(unsigned int history, const uint32_t &pc) {
+        if(Shared == NOT_USING_SHARE) {
+            // Regular history
+            return  history;
+        }
+        // Create mask in the form of 00..011..1 with (history size) amount of 1's
+        unsigned int history_mask = (1<<(historySize+1)) - 1;
+        uint32_t masked_pc = pc;
+        if(Shared == USING_SHARE_LSB) {
+            // XOR of history with pc from 3rd bit
+            masked_pc = masked_pc >> 2;
+        }
+        else { // Shared == USING_SHARE_MID
+            // XOR of history with pc from 16th bit
+            masked_pc = masked_pc >> 16;
+        }
+        // Sample (history size) amount of bits from pc and perform XOR with history
+        return (history ^ (masked_pc & history_mask));
+    }
+
     void update(const uint32_t &pc,const uint32_t &targetPc, const bool &taken, uint32_t pred_dst)
     {
         // Update global & shared:
@@ -191,7 +227,7 @@ public:
         entry->valid = true; // Always set this
     }
     // Predicts branch conclusion based on tag's history in Fetch stage
-    bool predict(const uint32_t pc, uint32_t * dst) {
+    bool predict(const uint32_t& pc, uint32_t * dst) {
         // Convert pc to tag
         const unsigned index = ((pc >> 2) & index_mask) % btbSize;
         // Load BHR with tag's index
@@ -202,6 +238,10 @@ public:
             // Load local/global history and FSM table according to BTB flags
             unsigned int history_index = isGlobalHist ?  publicBHR.getHistory() : entry->localBHR.getHistory();
             BimodalFSM ** fsm_table = isGlobalTable ? sharedTable : entry->fsm;
+            if(isGlobalTable) {
+                // XOR history with pc
+                history_index = getSharedHistory(history_index, pc);
+            }
             // Load branch prediction from Bipodal FSM
             BimodalState bi_state = (*fsm_table)[history_index]->getState();
             if(bi_state == WT || bi_state == ST) {
@@ -237,13 +277,13 @@ static unsigned tagSize;
 static unsigned fsmState;
 static bool isGlobalHist;
 static bool isGlobalTable;
-static int Shared;
+static ShareStatus Shared;
 //static BTBentry *BTB;
 
 int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned fsmState,
             bool isGlobalHist, bool isGlobalTable, int Shared)
 {
-    BP_BTB = new BTB(btbSize, historySize, tagSize, fsmState, isGlobalHist, isGlobalTable);
+    BP_BTB = new BTB(btbSize, historySize, tagSize, fsmState, isGlobalHist, isGlobalTable, Shared);
     /*
     btbSize = btbSize;
     historySize = historySize;
@@ -268,7 +308,7 @@ int BP_init(unsigned btbSize, unsigned historySize, unsigned tagSize, unsigned f
 /** Lior V=dvIR*/
 bool BP_predict(uint32_t pc, uint32_t *dst)
 {
-    return false;
+    return BP_BTB->predict(pc, dst);
 }
 
 /** Shai Haim Yehezkel */
