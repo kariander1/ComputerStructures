@@ -115,7 +115,7 @@ class FSM_table
         }
         void reset(const bool &allocate=false)
         {
-            for (int i = 0; i < num_of_fsm; i++)
+            for (unsigned int i = 0; i < num_of_fsm; i++)
             {
                 if(allocate)
                 {
@@ -128,7 +128,7 @@ class FSM_table
         friend ostream& operator<<(ostream& os, const FSM_table& table)
         {
             os << '{';
-            for (int i = 0; i < table.num_of_fsm; i++)
+            for (unsigned int i = 0; i < table.num_of_fsm; i++)
             {
                 os << ' ' << i << ':' << *table.fsm[i] << ' ';
             }
@@ -144,18 +144,22 @@ class BHR
     unsigned int history_mask;   // Mask for keeping history in correct size
 
 public:
-    BHR(const unsigned &historySize) : history_size(historySize), history_mask((1 << historySize) - 1) {}
+    BHR(const unsigned historySize) : history_size(historySize), history_mask((1 << historySize) - 1) {}
     void update(const bool &taken)
     {
-        history_record << 1;     // Shift left by one space
-        history_record += taken; // add 0/1 according to taken/not taken
+        this->history_record =this->history_record  << 1;     // Shift left by one space
+        this->history_record += taken; // add 0/1 according to taken/not taken
 
         // Cap the value to be less than history_mask
-        history_record = history_record & history_mask;
+        this->history_record = history_record & history_mask;
     }
     const unsigned int getHistory()
     {
         return history_record;
+    }
+    void setHistory(const unsigned int history)
+    {
+        this->history_record=history;
     }
      friend ostream& operator<<(ostream& os, const BHR& bhr)
      {
@@ -193,13 +197,13 @@ public:
     BHR local_BHR;
     FSM_table local_table;
 
-    BTBentry_p(const unsigned &historySize, const unsigned &fsmState) 
+    BTBentry_p(const unsigned historySize, const unsigned &fsmState) 
         : valid(false), local_BHR(historySize),local_table(historySize,fsmState) {}
     
         friend ostream& operator<<(ostream& os, const BTBentry_p& entry)
         {
-            std::cout << entry.valid << ' '<< std::setfill('0') << std::setw(32) << entry.tag<< ' ';
-            std::cout << std::setfill('0') << std::setw(32) << entry.target << ' ';
+            std::cout << entry.valid << ' '<< std::setfill('0') << std::setw(32) << std::hex <<   entry.tag<< ' ';
+            std::cout << std::setfill('0') << std::setw(32) << std::hex <<   entry.target << ' ';
             std::cout << entry.local_BHR << ' ' << entry.local_table;
             return os;
         }
@@ -223,6 +227,8 @@ private:
     bool isGlobalTable;
     BTBentry *entries;
     int Shared;
+    int update_counter;
+    int flush_counter;
 
 public:
   
@@ -242,7 +248,9 @@ public:
           global_table(historySize,fsm_state),
           isGlobalHist(isGlobalHist),
           isGlobalTable(isGlobalTable),
-          Shared(Shared)
+          Shared(Shared),
+          update_counter(0),
+          flush_counter(0)
     {
         entries = new BTBentry[btbSize]; // Allocate array of entries
         for (size_t i = 0; i < btbSize; i++)
@@ -274,7 +282,7 @@ public:
             return history;
         }
         // Create mask in the form of 00..011..1 with (history size) amount of 1's
-        unsigned int history_mask = (1 << (historySize + 1)) - 1;
+        unsigned int history_mask = (1 << (historySize)) - 1;
         uint32_t masked_pc = pc;
         if (Shared == USING_SHARE_LSB)
         {
@@ -299,33 +307,43 @@ public:
     }
     void update(const uint32_t &pc, const uint32_t &targetPc, const bool &taken, uint32_t pred_dst)
     {
-        std::cout << *this;
         
-        const bool correct_pred = (targetPc == pred_dst);
-        // if !correct_pred, flush++ ?
+       
+
+
+        // Update counters
+        update_counter++;
+        if ((taken && targetPc != pred_dst) || (!taken && pred_dst!=(pc+4)) )
+        {
+            flush_counter++;
+        }
+        
        
         // Determine entry according to PC        
         BTBentry entry = this->entries[getEntryByIndex(pc)];
         const unsigned int current_tag = getTag(pc);
         
         // Reset the entry if not valid (=never set before) or it conflicts
-        if (!entry->valid || entry->tag != current_tag)
+        if ((!entry->valid) || (entry->tag != current_tag))
         {            
             entry->tag = current_tag;
             entry->target = targetPc;
-            entry->local_BHR = 0;
+            entry->local_BHR.setHistory(0);
             entry->local_table.reset();
             
         }
         // Always set this since after this update the entry will have valid data
         entry->valid = true; 
+        if(taken)
+        {
+            entry->target = targetPc;
+        }
+
         // From here the entry is guaranteed to be valid, whether new or not
         
-        // Update BHR values of entry and globa, even if not using one of them
-        this->global_BHR.update(taken);
-        entry->local_BHR.update(taken);    
+       
 
-        // Detemine which history will be used for updating tables
+        // Determine which history will be used for updating tables
         BHR hist_for_update = isGlobalHist ? global_BHR : entry->local_BHR;
         
         // For updating global history consider XOR/LSB operations:
@@ -334,22 +352,26 @@ public:
         entry->local_table.update(hist_for_update.getHistory(),taken);
         
         
-        
+         // Update BHR values of entry and global, even if not using one of them
+        this->global_BHR.update(taken);
+        entry->local_BHR.update(taken);    
 
+
+        //cout << *this;
         
     }
 
     // Predicts branch conclusion based on tag's history in Fetch stage
     bool predict(const uint32_t &pc, uint32_t *dst)
     {
-        // Convert pc to tag
-        // I dont think this is the index .. propably use getEntryByIndex
-        const unsigned index = ((pc >> 2) & entry_index_mask) % btbSize;
-        // Load BHR with tag's index
+        // Convert pc to index
+        const unsigned index = getEntryByIndex(pc);
+        const unsigned int current_tag = getTag(pc);
+        // Load BHR with index
         BTBentry entry = this->entries[index];
-        if (entry->valid)
+        if (entry->valid && current_tag == entry->tag)
         {
-            // tag exists
+            // index exists
 
             // Load local/global history and FSM table according to BTB flags
             unsigned int history_index = isGlobalHist ? global_BHR.getHistory() : entry->local_BHR.getHistory();
@@ -386,7 +408,22 @@ public:
         {
             cout<< i << " : " << *btb.entries[i] <<endl;
         }
-        
+        return os;
+    }
+    void updateStats(SIM_stats *curStats)
+    {
+        curStats->br_num = update_counter;
+        curStats->flush_num = flush_counter;
+
+        const unsigned int valid_bit_size = btbSize;
+        const unsigned int tag_bit_size = btbSize*tagSize;
+        const unsigned int target_bit_size = 30 * btbSize;
+        const unsigned int history_bit_size = isGlobalHist ? historySize : historySize*btbSize ;
+
+        const unsigned int table_size = (2 << historySize);
+        const unsigned int table_bit_size = isGlobalTable ? table_size : table_size*btbSize;
+
+        curStats->size = valid_bit_size+tag_bit_size+target_bit_size+history_bit_size+table_bit_size;
     }
 };
 static BTB *BP_BTB;
@@ -408,9 +445,11 @@ bool BP_predict(uint32_t pc, uint32_t *dst)
 void BP_update(uint32_t pc, uint32_t targetPc, bool taken, uint32_t pred_dst)
 {
     BP_BTB->update(pc, targetPc, taken, pred_dst);
+    //std::cout << BP_BTB;
 }
 
 void BP_GetStats(SIM_stats *curStats)
 {
-    return;
+    BP_BTB->updateStats(curStats);
+    delete BP_BTB;
 }
