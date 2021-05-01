@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/compm/Desktop/ComputerStructures/HW1/bp_api.h
+/home/compm/Desktop/HW/HW1/bp_api.h
 stdbool.h
 -
 stdint.h
 -
 
-/home/compm/Desktop/ComputerStructures/HW1/bp_main.c
+/home/compm/Desktop/HW/HW1/bp_main.c
 stdio.h
 -
 stdlib.h
@@ -22,5 +22,5 @@ string.h
 stdbool.h
 -
 bp_api.h
-/home/compm/Desktop/ComputerStructures/HW1/bp_api.h
+/home/compm/Desktop/HW/HW1/bp_api.h
 

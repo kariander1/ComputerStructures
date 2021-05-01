@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/compm/Desktop/ComputerStructures/HW1
-BuildDirectory: /home/compm/Desktop/ComputerStructures/HW1/build
+SourceDirectory: /home/compm/Desktop/HW/HW1
+BuildDirectory: /home/compm/Desktop/HW/HW1/build
 
 # Where to place the cost data store
 CostDataFile: 
@@ -16,24 +16,17 @@ Site: compm-VirtualBox
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-x86_64-linux-gnu-g++-5
 
+# Subprojects
+LabelsForSubprojects: 
+
 # Submission information
-IsCDash: 
-CDashVersion: 
-QueryCDashVersion: 
-DropSite: 
-DropLocation: 
-DropSiteUser: 
-DropSitePassword: 
-DropSiteMode: 
-DropMethod: http
-TriggerSite: 
-ScpCommand: /usr/bin/scp
+SubmitURL: http://
 
 # Dashboard start time
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/compm/Desktop/ComputerStructures/HW1"
+ConfigureCommand: "/usr/local/bin/cmake" "/home/compm/Desktop/HW/HW1"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
 DefaultCTestConfigurationType: Release
 
@@ -52,6 +45,7 @@ SVNUpdateOptions:
 
 # Git options
 GITCommand: /usr/bin/git
+GITInitSubmodules: 
 GITUpdateOptions: 
 GITUpdateCustom: 
 
@@ -75,19 +69,19 @@ CompilerVersion: 5.4.0
 PurifyCommand: 
 ValgrindCommand: 
 ValgrindCommandOptions: 
+DrMemoryCommand: 
+DrMemoryCommandOptions: 
+CudaSanitizerCommand: 
+CudaSanitizerCommandOptions: 
 MemoryCheckType: 
 MemoryCheckSanitizerOptions: 
-MemoryCheckCommand: MEMORYCHECK_COMMAND-NOTFOUND
+MemoryCheckCommand: /usr/bin/valgrind
 MemoryCheckCommandOptions: 
 MemoryCheckSuppressionFile: 
 
 # Coverage
 CoverageCommand: /usr/bin/gcov
 CoverageExtraFlags: -l
-
-# Cluster commands
-SlurmBatchCommand: SLURM_SBATCH_COMMAND-NOTFOUND
-SlurmRunCommand: SLURM_SRUN_COMMAND-NOTFOUND
 
 # Testing options
 # TimeOut is the amount of time in seconds to wait for processes

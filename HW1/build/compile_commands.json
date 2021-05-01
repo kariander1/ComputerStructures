@@ -1,12 +1,12 @@
 [
 {
-  "directory": "/home/compm/Desktop/ComputerStructures/HW1/build",
-  "command": "/usr/bin/x86_64-linux-gnu-gcc-5    -g   -o CMakeFiles/bp.dir/bp_main.c.o   -c /home/compm/Desktop/ComputerStructures/HW1/bp_main.c",
-  "file": "/home/compm/Desktop/ComputerStructures/HW1/bp_main.c"
+  "directory": "/home/compm/Desktop/HW/HW1/build",
+  "command": "/usr/bin/x86_64-linux-gnu-gcc-5   -g -o CMakeFiles/bp.dir/bp_main.c.o -c /home/compm/Desktop/HW/HW1/bp_main.c",
+  "file": "/home/compm/Desktop/HW/HW1/bp_main.c"
 },
 {
-  "directory": "/home/compm/Desktop/ComputerStructures/HW1/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-5     -g   -o CMakeFiles/bp.dir/bp.cpp.o -c /home/compm/Desktop/ComputerStructures/HW1/bp.cpp",
-  "file": "/home/compm/Desktop/ComputerStructures/HW1/bp.cpp"
+  "directory": "/home/compm/Desktop/HW/HW1/build",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-5   -g -o CMakeFiles/bp.dir/bp.cpp.o -c /home/compm/Desktop/HW/HW1/bp.cpp",
+  "file": "/home/compm/Desktop/HW/HW1/bp.cpp"
 }
 ]
