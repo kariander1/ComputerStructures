@@ -42,48 +42,20 @@ for f in $FILES # Loop over all test files
 do
   echo "Processing $f file..."
   test_num=`(echo ${f} | cut -d'.' -f 2 | cut -d't' -f 3)`
-  execute_first="$VALGRIND ./$1 "
-  execute_second="$VALGRIND ./$2 "
-
   log_prog_1="$1_test$test_num.out"
   log_prog_2="$2_test$test_num.out"
 
-  `$execute_first <$f >$log_prog_1`
+  $1 $f >$log_prog_1
 
 
-   if [ "$?" == 1 ] # Check error output of VALGRIND
-	then
-	    echo "Test $test_num : $1 memory leakage! see $LOG_NAME"
-	    cp $VALGRIND_LOG	"$1_test${test_num}_$VALGRIND_LOG"
-	    echo "Test $test_num : $1 memory leakage!" >> $LOG_NAME
-	    #read varname
-	fi
-	bytes_prog1=`grep -P "bytes allocated" $VALGRIND_LOG | cut -d" " -f11 | tr -d -c 0-9`
 	if [ ! -z "$2" ]; then
-		`$execute_second <$f >$log_prog_2`	
-	   	if [ "$?" == 1 ]  # Check error output of VALGRIND
-			then
-			    echo "Test $test_num : $2 memory leakage! see $LOG_NAME"
-			    cp $VALGRIND_LOG	"$2_test${test_num}_$VALGRIND_LOG"
-			    echo "Test $test_num : $2 memory leakage!" >> $LOG_NAME
-			    #read varname
-		fi
-		bytes_prog2=`grep -P "bytes allocated" $VALGRIND_LOG | cut -d" " -f11 | tr -d -c 0-9`
-
-
-		if [ $bytes_prog1 -lt $bytes_prog2 ]; then #Check which program uses more bytes
-			prog1_mem_favor=$((prog1_mem_favor+1))
-		fi
-
-		if [ $bytes_prog2 -lt $bytes_prog1 ]; then #Check which program uses more bytes
-			prog2_mem_favor=$((prog1_mem_favor+1))
-		fi
-			
+		$2 $f >$log_prog_2		
 		DIFF=`diff ${1}_test$test_num.out ${2}_test$test_num.out`
 		if [ "$DIFF" != "" ] 
 			then
 			    echo "Test $test_num : Different outputs! see $LOG_NAME"
 			    echo "Test $test_num : Different outputs!" >> $LOG_NAME
+				read -p "Press enter to continue"
 			    #read varname
 		fi
 		if [ "$DIFF" == "" ] 
@@ -106,14 +78,4 @@ if [ -f $LOG_NAME ]; then
     exit -2
 fi
 
-if [ ! -z "$2" ]; then
-#Inform user which prog was more memory consuming
-	if [ $prog1_mem_favor -lt $prog2_mem_favor ]; then #Check which program uses more bytes
-		echo "$2 Uses more bytes most of the times!"
-	fi
-	if [ $prog2_mem_favor -lt $prog1_mem_favor ]; then #Check which program uses more bytes
-		echo "$1 Uses more bytes most of the times!"
-	fi
-fi
-rm $VALGRIND_LOG
 exit 0

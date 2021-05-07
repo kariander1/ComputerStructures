@@ -115,7 +115,7 @@ public:
         {
             delete fsm[i];
         }
-        delete fsm;
+        delete[] fsm;
     }
     // Updates a certaing FSM by index
     void update(const unsigned int &index, const bool &taken)
@@ -218,12 +218,16 @@ public:
     unsigned tag;
     unsigned target;
     BHR local_BHR;
-    FSM_table local_table;
+    FSM_table* local_table;
 
     // C'tor
     BTBentry_p(const unsigned historySize, const unsigned &fsmState)
-        : valid(false), local_BHR(historySize), local_table(historySize, fsmState) {}
+        : valid(false), local_BHR(historySize), local_table(new FSM_table(historySize, fsmState)) {}
     // Output operator for printing. used in debug.
+    ~BTBentry_p()
+    {
+        delete local_table;
+    }
     friend ostream &operator<<(ostream &os, const BTBentry_p &entry)
     {
         std::cout << entry.valid << ' ' << std::setfill('0') << std::setw(32) << std::hex << entry.tag << ' ';
@@ -258,7 +262,7 @@ private:
     unsigned tagSize;
     unsigned entry_index_mask; // For calculating tag
     BHR global_BHR;
-    FSM_table global_table;
+    FSM_table* global_table;
     bool isGlobalHist;
     bool isGlobalTable;
     BTBentry *entries;
@@ -280,7 +284,7 @@ public:
           tagSize(tagSize),
           entry_index_mask((1 << ((int)log2(btbSize))) - 1),          
           global_BHR(historySize),
-          global_table(historySize, fsm_state),
+          global_table(new FSM_table(historySize, fsm_state)),
           isGlobalHist(isGlobalHist),
           isGlobalTable(isGlobalTable),
           Shared(Shared),
@@ -303,7 +307,9 @@ public:
             delete entries[i];
         }
 
-        delete entries;
+        delete[] entries;
+        
+        delete global_table;
     }
 
     /**
@@ -365,14 +371,12 @@ public:
             entry->tag = current_tag;
             entry->target = targetPc;
             entry->local_BHR.setHistory(0);
-            entry->local_table.reset();
+            entry->local_table->reset();
         }
         // Always set this since after this update the entry will have valid data
         entry->valid = true;
-        if (taken)
-        {
-            entry->target = targetPc;
-        }
+        entry->target = targetPc; // Update target to newest one (in taken/not taken)
+        
 
         // From here the entry is guaranteed to be valid, whether new or not
 
@@ -381,15 +385,15 @@ public:
 
         // For updating global history consider XOR/LSB operations:
         unsigned int masked_history = getSharedHistory(hist_for_update.getHistory(), pc);
-        this->global_table.update(masked_history, taken);
-        entry->local_table.update(hist_for_update.getHistory(), taken);
+        this->global_table->update(masked_history, taken);
+        entry->local_table->update(hist_for_update.getHistory(), taken);
 
         // Update BHR values of entry and global, even if not using one of them
         this->global_BHR.update(taken);
         entry->local_BHR.update(taken);
 
         // If we want to debug and print the BTB, uncomment this:
-        //cout << *this;
+        cout << *this;
     }
 
     // Predicts branch conclusion based on tag's history in Fetch stage
@@ -408,14 +412,14 @@ public:
             unsigned int history_index = isGlobalHist ? global_BHR.getHistory() : entry->local_BHR.getHistory();
 
             // Get fsm table by reference so it win't be deleted at d'tor at the end of block
-            FSM_table &fsm_table = isGlobalTable ? global_table : entry->local_table;
+            FSM_table *fsm_table = isGlobalTable ? global_table : entry->local_table;
             if (isGlobalTable)
             {
                 // XOR history with pc
                 history_index = getSharedHistory(history_index, pc);
             }
             // Load branch prediction from Bipodal FSM
-            BimodalState bi_state = fsm_table.getStateByIndex(history_index);
+            BimodalState bi_state = fsm_table->getStateByIndex(history_index);
             if (bi_state == WT || bi_state == ST)
             {
                 // Branch taken
