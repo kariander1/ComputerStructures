@@ -7,6 +7,7 @@
 #include <vector>
 #include <list>
 #include <math.h>
+#include <time.h>
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -16,21 +17,44 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
+#define NOT_USED (-1)
+
 class CacheBlock_p
 {
 	time_t last_accessed_time;
-	// TODO c'tor & d'tor !
-	//vector<CacheBlock>::iterator pos_in_vector;
+	bool valid;
+public:
+    CacheBlock_p() {
+        last_accessed_time = NOT_USED;
+        valid = false;
+    }
+    ~CacheBlock_p() = default;
+    bool isValid() {
+        return valid;
+    }
+    time_t getTime() {
+        return last_accessed_time;
+    }
 };
 typedef struct CacheBlock_p *CacheBlock;
 class Way
 {
+    unsigned way_size;
 	CacheBlock *blocks;
-
-	// TODO think of a data structure for this
-	//std::vector<CacheBlock> least_recently_used_blocks; // Sorted such that the least used is always at the back
-
-	// TODO c'tor & d'tor !
+public:
+    Way(unsigned way_size) : way_size(way_size) {
+        blocks = new CacheBlock[way_size]();
+    };
+    ~Way() {
+        delete[] blocks;
+    }
+    // Return true if block is used
+    bool isValid(unsigned index) {
+        return blocks[index]->isValid();
+    }
+    void update_block(unsigned index) {
+        if()
+    }
 };
 
 class CacheLevel
