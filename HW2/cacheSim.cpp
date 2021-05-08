@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <list>
 #include <math.h>
 #include <time.h>
 using std::cerr;
@@ -17,67 +16,132 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-#define NOT_USED (-1)
+#define NOT_USED (-1) // for when block hasn't been used yet
 
 class CacheBlock_p
 {
 	time_t last_accessed_time;
-	bool valid;
+	unsigned tag;
 public:
     CacheBlock_p() {
         last_accessed_time = NOT_USED;
-        valid = false;
+        tag = NOT_USED;
     }
     ~CacheBlock_p() = default;
-    bool isValid() {
-        return valid;
-    }
     time_t getTime() {
         return last_accessed_time;
     }
+    void setTime() {
+        time(&last_accessed_time);
+    }
+    unsigned getTag() {
+        return tag;
+    }
+    void setTag(unsigned new_tag) {
+        tag = new_tag;
+    }
 };
 typedef struct CacheBlock_p *CacheBlock;
-class Way
+class Set
 {
-    unsigned way_size;
+    unsigned waze_num; //It's a joke, shay
 	CacheBlock *blocks;
 public:
-    Way(unsigned way_size) : way_size(way_size) {
-        blocks = new CacheBlock[way_size]();
+    Set(unsigned waze_num) : waze_num(waze_num) {
+        blocks = new CacheBlock[waze_num]();
     };
-    ~Way() {
+    ~Set() {
         delete[] blocks;
     }
-    // Return true if block is used
-    bool isValid(unsigned index) {
-        return blocks[index]->isValid();
+    // Insert new block to SET according to LRU rules.
+    void insertNewBlock(unsigned set, unsigned tag) {
+        unsigned last_block_index = 0;
+        time_t last_block_time = NOT_USED;
+        for(int i = 0; i < waze_num; i++) {
+            time_t current_block_time = blocks[i]->getTime();
+            if(current_block_time == NOT_USED) {
+                // Found an unused way
+                blocks[i]->setTime();
+                blocks[i]->setTag(tag);
+                return;
+            }
+            else {
+                if(difftime(current_block_time, last_block_time) > 0) {
+                    //current block time < last block time
+                    last_block_time = current_block_time;
+                    last_block_index = i;
+                }
+            }
+        }
+        // update last block time and tag
+        blocks[last_block_index]->setTime();
+        blocks[last_block_index]->setTag(tag);
     }
-    void update_block(unsigned index) {
-        if()
+    // Check if block associated with given tag exists in SET
+    bool isBlockInSet(unsigned tag) {
+        for(int i = 0; i < waze_num; i++) {
+            if(blocks[i]->getTag() == tag) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // update an existing block associated with given tag
+    void updateExistingBlock(unsigned tag) {
+        for(int i = 0; i < waze_num; i++) {
+            if(blocks[i]->getTag() == tag) {
+                blocks[i]->setTime();
+                return;
+            }
+        }
     }
 };
 
-class CacheLevel
+class CacheLevel_p
 {
-	// num_of_blocks = cache_size/block_size
-	// num_of_sets = num_of_blocks/num_of_ways
-	// tag_size = 32 - (log2(num_of_sets)) - (log2(block_size))
+	unsigned num_of_blocks; // = cache_size/block_size
+	unsigned num_of_sets; // = num_of_blocks/num_of_ways
+	unsigned tag_size; // = 32 - (log2(num_of_sets)) - (log2(block_size))
 	unsigned int cache_byte_size;
-	unsigned int association;
+	unsigned int waze_num;
 	unsigned int num_of_cycles; // Mask for keeping history in correct size
 	unsigned int block_byte_size;
 
 public:
-};
+    CacheLevel_p(unsigned  cache_byte_size, unsigned waze_num, unsigned num_of_cycles, unsigned block_byte_size) :
+        cache_byte_size(cache_byte_size), waze_num(waze_num), num_of_cycles(num_of_cycles), block_byte_size(block_byte_size) {
+        num_of_blocks = cache_byte_size/block_byte_size;
+        num_of_sets = num_of_blocks/waze_num;
+        tag_size = 30 - int(log2(num_of_sets)) - int(log2(block_byte_size));
+    }
+    ~CacheLevel_p() = default;
+    // Get matching set according to memory address
+    unsigned getSet(unsigned address) {
+        unsigned offset_bits = int(log2(block_byte_size));
+        address = address >> (offset_bits + 2);
+        unsigned mask = 1 << (int(log2(num_of_sets) - 1));
+        return (address & mask);
+    }
+    // Get tag from address
+    unsigned getTag(unsigned address) {
+        unsigned offset_and_set_bits = 32 - tag_size;
+        return (address >> offset_and_set_bits);
+    }
+} ;
+typedef class CacheLevel_p * CacheLevel;
+
 enum WritePolicy
 {
+    WRITE_ERROR_MIN,
 	NO_WRITE_ALLOCATE = 0,
-	WRITE_ALLOCATE = 1
+	WRITE_ALLOCATE = 1,
+    WRITE_ERROR_MAX
 };
 class Cache
 {
 
-	WritePolicy write_policy;
+	//WritePolicy write_policy;
+	unsigned write_policy;
 	CacheLevel L1;
 	CacheLevel L2;
 
@@ -85,16 +149,33 @@ public:
 	double L1MissRate;
 	double L2MissRate;
 	double avgAccTime;
+	unsigned  MemCyc;
+	unsigned Bsize;
+	unsigned L1Size;
+	unsigned L2Size;
+	unsigned L1Assoc;
+	unsigned L2Assoc;
+	unsigned L1Cyc;
+	unsigned L2Cyc;
 	Cache(const unsigned &MemCyc, const unsigned &BSize, const unsigned &L1Size, const unsigned &L2Size,
 		  const unsigned &L1Assoc, const unsigned &L2Assoc, const unsigned &L1Cyc,
-		  const unsigned &L2Cyc, const unsigned &WrAlloc)
+		  const unsigned &L2Cyc,   const unsigned &WrAlloc) :
+		  MemCyc(MemCyc), Bsize(BSize), L1Size(L1Size), L2Size(L2Size), L1Assoc(L1Assoc), L2Assoc(L2Assoc), L1Cyc(L1Cyc),  L2Cyc(L2Cyc), write_policy(WrAlloc),  L1MissRate(0), L2MissRate(0), avgAccTime(0)
 	{
-		// TODO initialzize cache levels
+		L1 = new CacheLevel_p(BSize, L1Assoc, L1Cyc, L1Size);
+		L2 = new CacheLevel_p(BSize, L2Assoc, L2Cyc, L2Size);
 	}
-	~Cache() = delete;
+	~Cache() {
+	    delete L1;
+	    delete L2;
+	}
 
-	void cacheRead();
-	void cacheWrite();
+	void cacheRead(unsigned long int num) {
+	    return;
+	}
+	void cacheWrite() {
+	    return;
+	}
 };
 int main(int argc, char **argv)
 {
@@ -199,7 +280,7 @@ int main(int argc, char **argv)
 		switch (operation)
 		{
 		case 'R':
-			cache.cacheRead(); // Lior
+			cache.cacheRead(num); // Lior
 			break;
 		case 'W':
 			cache.cacheWrite(); // Shai
