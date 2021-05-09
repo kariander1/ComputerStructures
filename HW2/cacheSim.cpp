@@ -148,11 +148,11 @@ class CacheLevel
 public:
 	unsigned int num_of_cycles;
 	CacheLevel(const unsigned &cache_size_log, const unsigned &waze_num_log, const unsigned &num_of_cycles,
-				 const unsigned &block_byte_log , const unsigned &cache_num) : 
+				 const unsigned &block_size_log , const unsigned &cache_num) : 
 				 num_of_ways(pow(2,waze_num_log)),
-				 num_of_blocks(pow(2,cache_size_log-block_byte_log)),
+				 num_of_blocks(pow(2,cache_size_log-block_size_log)),
 				num_of_sets(num_of_blocks / num_of_ways), // 0 associativeness is Direct-mapping
-				tag_size(32 - int(log2(num_of_sets)) - block_byte_log),
+				tag_size(32 - int(log2(num_of_sets)) - block_size_log),
 				 //cache_byte_size(cache_byte_size),				 
 				 num_of_cycles(num_of_cycles),
 				 block_size_log(block_size_log),
@@ -280,10 +280,13 @@ public:
 	// Get matching set according to memory address
 	unsigned int getSet(unsigned long int address)
 	{
+	//	std::cout << address;
+	//	std::cout << this->block_size_log;
 		// 	block_size_log is logarithmic, and represent the num of bits reservd for offset
 		address = address >> (block_size_log);
 		const unsigned int mask = 1 << (int(log2(num_of_sets) - 1));
-		
+	//	std::cout << mask;
+	//	std::cout << num_of_sets;
 		return (address & mask);
 	}
 	// Get tag from address
