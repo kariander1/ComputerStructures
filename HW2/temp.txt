@@ -1,0 +1,559 @@
+==22479== Memcheck, a memory error detector
+==22479== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==22479== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==22479== Command: ./build/CacheSim ./examples/example1_trace --mem-cyc 100 --bsize 3 --wr-alloc 1 --l1-size 4 --l1-assoc 1 --l1-cyc 1 --l2-size 6 --l2-assoc 0 --l2-cyc 5
+==22479== Parent PID: 9509
+==22479== 
+--22479-- 
+--22479-- Valgrind options:
+--22479--    --leak-check=full
+--22479--    -v
+--22479--    --show-leak-kinds=all
+--22479--    --log-file=temp.txt
+--22479-- Contents of /proc/version:
+--22479--   Linux version 4.4.0-210-generic (buildd@lgw01-amd64-009) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.12) ) #242-Ubuntu SMP Fri Apr 16 09:57:56 UTC 2021
+--22479-- 
+--22479-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-avx-avx2-bmi
+--22479-- Page sizes: currently 4096, max supported 4096
+--22479-- Valgrind library directory: /usr/lib/valgrind
+--22479-- Reading syms from /home/compm/Desktop/HW/HW2/build/CacheSim
+--22479-- Reading syms from /lib/x86_64-linux-gnu/ld-2.23.so
+--22479--   Considering /lib/x86_64-linux-gnu/ld-2.23.so ..
+--22479--   .. CRC mismatch (computed 2b0241bb wanted 2b26b6ff)
+--22479--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.23.so ..
+--22479--   .. CRC is valid
+--22479-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--22479--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--22479--   .. CRC mismatch (computed eea41ea9 wanted 2009db78)
+--22479--    object doesn't have a symbol table
+--22479--    object doesn't have a dynamic symbol table
+--22479-- Scheduler: using generic scheduler lock implementation.
+--22479-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==22479== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-22479-by-compm-on-???
+==22479== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-22479-by-compm-on-???
+==22479== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-22479-by-compm-on-???
+==22479== 
+==22479== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==22479== don't want to do, unless you know exactly what you're doing,
+==22479== or are doing some strange experiment):
+==22479==   /usr/lib/valgrind/../../bin/vgdb --pid=22479 ...command...
+==22479== 
+==22479== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==22479==   /path/to/gdb ./build/CacheSim
+==22479== and then give GDB the following command
+==22479==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=22479
+==22479== --pid is optional if only one valgrind process is running
+==22479== 
+--22479-- REDIR: 0x401cf40 (ld-linux-x86-64.so.2:strlen) redirected to 0x3809e181 (???)
+--22479-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--22479--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--22479--   .. CRC mismatch (computed 2567ccf6 wanted 49420590)
+--22479--    object doesn't have a symbol table
+--22479-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--22479--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--22479--   .. CRC mismatch (computed 0e27c9a8 wanted ac585421)
+--22479--    object doesn't have a symbol table
+==22479== WARNING: new redirection conflicts with existing -- ignoring it
+--22479--     old: 0x0401cf40 (strlen              ) R-> (0000.0) 0x3809e181 ???
+--22479--     new: 0x0401cf40 (strlen              ) R-> (2007.0) 0x04c31020 strlen
+--22479-- REDIR: 0x401b890 (ld-linux-x86-64.so.2:index) redirected to 0x4c30bc0 (index)
+--22479-- REDIR: 0x401bab0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c320d0 (strcmp)
+--22479-- REDIR: 0x401dca0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c35270 (mempcpy)
+--22479-- Reading syms from /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+--22479--   Considering /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21 ..
+--22479--   .. CRC mismatch (computed eb112249 wanted d0509bc9)
+--22479--    object doesn't have a symbol table
+--22479-- Reading syms from /lib/x86_64-linux-gnu/libm-2.23.so
+--22479--   Considering /lib/x86_64-linux-gnu/libm-2.23.so ..
+--22479--   .. CRC mismatch (computed 139cd6a9 wanted 1d3df7e7)
+--22479--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libm-2.23.so ..
+--22479--   .. CRC is valid
+--22479-- Reading syms from /lib/x86_64-linux-gnu/libgcc_s.so.1
+--22479--   Considering /lib/x86_64-linux-gnu/libgcc_s.so.1 ..
+--22479--   .. CRC mismatch (computed b9a68419 wanted 29d51b00)
+--22479--    object doesn't have a symbol table
+--22479-- Reading syms from /lib/x86_64-linux-gnu/libc-2.23.so
+--22479--   Considering /lib/x86_64-linux-gnu/libc-2.23.so ..
+--22479--   .. CRC mismatch (computed 53ae885f wanted a963d847)
+--22479--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.23.so ..
+--22479--   .. CRC is valid
+--22479-- REDIR: 0x576aa80 (libc.so.6:strcasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x5766300 (libc.so.6:strcspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x576cd70 (libc.so.6:strncasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x5768770 (libc.so.6:strpbrk) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x5768b00 (libc.so.6:strspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x576a1cb (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x5768480 (libc.so.6:rindex) redirected to 0x4c308a0 (rindex)
+--22479-- REDIR: 0x575f180 (libc.so.6:malloc) redirected to 0x4c2db20 (malloc)
+--22479-- REDIR: 0x57667a0 (libc.so.6:strlen) redirected to 0x4c30f60 (strlen)
+--22479-- REDIR: 0x5769c70 (libc.so.6:__GI_memcmp) redirected to 0x4c33b90 (__GI_memcmp)
+--22479-- REDIR: 0x5764d50 (libc.so.6:strcmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x577a5f0 (libc.so.6:__strcmp_sse2_unaligned) redirected to 0x4c31f90 (strcmp)
+--22479-- REDIR: 0x57690e0 (libc.so.6:__GI_strstr) redirected to 0x4c354d0 (__strstr_sse2)
+--22479-- REDIR: 0x4ec7f10 (libstdc++.so.6:operator new[](unsigned long)) redirected to 0x4c2e7a0 (operator new[](unsigned long))
+--22479-- REDIR: 0x576f470 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x5828f60 (libc.so.6:__memcpy_avx_unaligned) redirected to 0x4c324a0 (memcpy@@GLIBC_2.14)
+--22479-- REDIR: 0x5769c30 (libc.so.6:bcmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x58494f0 (libc.so.6:__memcmp_sse4_1) redirected to 0x4c33cd0 (__memcmp_sse4_1)
+--22479-- REDIR: 0x4ec7e60 (libstdc++.so.6:operator new(unsigned long)) redirected to 0x4c2e080 (operator new(unsigned long))
+==22479== Invalid write of size 8
+==22479==    at 0x4034BD: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Invalid write of size 8
+==22479==    at 0x4034BD: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+--22479-- REDIR: 0x57698e0 (libc.so.6:memchr) redirected to 0x4c32170 (memchr)
+--22479-- REDIR: 0x576a430 (libc.so.6:__GI_mempcpy) redirected to 0x4c34fa0 (__GI_mempcpy)
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4F3BB13: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D1BB: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<unsigned long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D36C: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F49699: std::ostream& std::ostream::_M_insert<unsigned long>(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x403044: operator<<(std::ostream&, WayEntry_p const&) (cacheSim.cpp:90)
+==22479==    by 0x403298: operator<<(std::ostream&, Way_p const&) (cacheSim.cpp:125)
+==22479==    by 0x4035CF: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479== 
+==22479== Conditional jump or move depends on uninitialised value(s)
+==22479==    at 0x4F3BB1F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D1BB: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<unsigned long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D36C: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F49699: std::ostream& std::ostream::_M_insert<unsigned long>(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x403044: operator<<(std::ostream&, WayEntry_p const&) (cacheSim.cpp:90)
+==22479==    by 0x403298: operator<<(std::ostream&, Way_p const&) (cacheSim.cpp:125)
+==22479==    by 0x4035CF: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479== 
+--22479-- REDIR: 0x576a230 (libc.so.6:memset) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--22479-- REDIR: 0x584da30 (libc.so.6:__memset_avx2) redirected to 0x4c344c0 (memset)
+==22479== Invalid read of size 8
+==22479==    at 0x4035BE: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x4035BE: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403D62: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:436)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x403706: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403A83: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:353)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x4036F5: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403A83: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:353)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x4036F5: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403AFB: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:358)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x403706: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403AFB: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:358)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x4037B0: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403B82: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:367)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4037C1: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403B82: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:367)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4037C1: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403C08: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:397)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x4037B0: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403C08: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:397)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+--22479-- REDIR: 0x57717e0 (libc.so.6:strchrnul) redirected to 0x4c34da0 (strchrnul)
+==22479== Invalid read of size 8
+==22479==    at 0x40351E: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+--22479-- REDIR: 0x4ec5f10 (libstdc++.so.6:operator delete(void*)) redirected to 0x4c2f1e0 (operator delete(void*))
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40320A: Way_p::~Way_p() (cacheSim.cpp:118)
+==22479==    by 0x40352D: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab91f0 is 0 bytes inside a block of size 64 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403125: Way_p::Way_p(unsigned int const&) (cacheSim.cpp:104)
+==22479==    by 0x4034A9: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40354C: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:170)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40320A: Way_p::~Way_p() (cacheSim.cpp:118)
+==22479==    by 0x40352D: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8fd0 is 0 bytes inside a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403125: Way_p::Way_p(unsigned int const&) (cacheSim.cpp:104)
+==22479==    by 0x4034A9: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Invalid read of size 8
+==22479==    at 0x40351E: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40354C: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:170)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f30 is 0 bytes inside a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+--22479-- REDIR: 0x4ec5f40 (libstdc++.so.6:operator delete[](void*)) redirected to 0x4c2f6e0 (operator delete[](void*))
+--22479-- REDIR: 0x575f540 (libc.so.6:free) redirected to 0x4c2ed80 (free)
+==22479== 
+==22479== HEAP SUMMARY:
+==22479==     in use at exit: 72,704 bytes in 1 blocks
+==22479==   total heap usage: 22 allocs, 21 frees, 82,728 bytes allocated
+==22479== 
+==22479== Searching for pointers to 1 not-freed blocks
+==22479== Checked 107,040 bytes
+==22479== 
+==22479== 72,704 bytes in 1 blocks are still reachable in loss record 1 of 1
+==22479==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x4EC3EFF: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x40106F9: call_init.part.0 (dl-init.c:72)
+==22479==    by 0x401080A: call_init (dl-init.c:30)
+==22479==    by 0x401080A: _dl_init (dl-init.c:120)
+==22479==    by 0x4000C69: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+==22479==    by 0x13: ???
+==22479==    by 0xFFF000256: ???
+==22479==    by 0xFFF000267: ???
+==22479==    by 0xFFF000281: ???
+==22479==    by 0xFFF00028B: ???
+==22479==    by 0xFFF00028F: ???
+==22479==    by 0xFFF000297: ???
+==22479== 
+==22479== LEAK SUMMARY:
+==22479==    definitely lost: 0 bytes in 0 blocks
+==22479==    indirectly lost: 0 bytes in 0 blocks
+==22479==      possibly lost: 0 bytes in 0 blocks
+==22479==    still reachable: 72,704 bytes in 1 blocks
+==22479==         suppressed: 0 bytes in 0 blocks
+==22479== 
+==22479== Use --track-origins=yes to see where uninitialised values come from
+==22479== ERROR SUMMARY: 296 errors from 20 contexts (suppressed: 0 from 0)
+==22479== 
+==22479== 1 errors in context 1 of 20:
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40354C: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:170)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f30 is 0 bytes inside a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 2 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x40351E: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 3 of 20:
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40354C: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:170)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 4 of 20:
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40320A: Way_p::~Way_p() (cacheSim.cpp:118)
+==22479==    by 0x40352D: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab91f0 is 0 bytes inside a block of size 64 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403125: Way_p::Way_p(unsigned int const&) (cacheSim.cpp:104)
+==22479==    by 0x4034A9: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 5 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x40351E: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DAF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 6 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4037B0: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403C08: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:397)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 7 of 20:
+==22479== Invalid write of size 8
+==22479==    at 0x4034BD: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 1 errors in context 8 of 20:
+==22479== Invalid write of size 8
+==22479==    at 0x4034BD: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 2 errors in context 9 of 20:
+==22479== Mismatched free() / delete / delete []
+==22479==    at 0x4C2F24B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x40320A: Way_p::~Way_p() (cacheSim.cpp:118)
+==22479==    by 0x40352D: CacheLevel_p::~CacheLevel_p() (cacheSim.cpp:168)
+==22479==    by 0x403DBF: Cache::~Cache() (cacheSim.cpp:338)
+==22479==    by 0x402CEE: main (cacheSim.cpp:514)
+==22479==  Address 0x5ab8fd0 is 0 bytes inside a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403125: Way_p::Way_p(unsigned int const&) (cacheSim.cpp:104)
+==22479==    by 0x4034A9: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:161)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 2 errors in context 10 of 20:
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4037C1: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403B82: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:367)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== 
+==22479== 2 errors in context 11 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4037B0: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403B82: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:367)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 2 errors in context 12 of 20:
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x403706: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403AFB: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:358)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== 
+==22479== 2 errors in context 13 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4036F5: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403AFB: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:358)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 2 errors in context 14 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4036F5: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403A83: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:353)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 3 errors in context 15 of 20:
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4037C1: CacheLevel_p::getEntryForNewBlock(unsigned int const&) (cacheSim.cpp:232)
+==22479==    by 0x403C08: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:397)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== 
+==22479== 5 errors in context 16 of 20:
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x403706: CacheLevel_p::blockExists(unsigned int const&) (cacheSim.cpp:197)
+==22479==    by 0x403A83: Cache::cacheWrite(unsigned long const&) (cacheSim.cpp:353)
+==22479==    by 0x402BF3: main (cacheSim.cpp:548)
+==22479== 
+==22479== 
+==22479== 14 errors in context 17 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4035BE: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403D62: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:436)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479==  Address 0x5ab9160 is 0 bytes after a block of size 0 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x4039B0: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 14 errors in context 18 of 20:
+==22479== Invalid read of size 8
+==22479==    at 0x4035BE: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479==  Address 0x5ab8f38 is 0 bytes after a block of size 8 alloc'd
+==22479==    at 0x4C2E80F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==22479==    by 0x403468: CacheLevel_p::CacheLevel_p(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:158)
+==22479==    by 0x40397F: Cache::Cache(unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&, unsigned int const&) (cacheSim.cpp:333)
+==22479==    by 0x4029EA: main (cacheSim.cpp:514)
+==22479== 
+==22479== 
+==22479== 120 errors in context 19 of 20:
+==22479== Conditional jump or move depends on uninitialised value(s)
+==22479==    at 0x4F3BB1F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D1BB: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<unsigned long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D36C: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F49699: std::ostream& std::ostream::_M_insert<unsigned long>(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x403044: operator<<(std::ostream&, WayEntry_p const&) (cacheSim.cpp:90)
+==22479==    by 0x403298: operator<<(std::ostream&, Way_p const&) (cacheSim.cpp:125)
+==22479==    by 0x4035CF: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479== 
+==22479== 
+==22479== 120 errors in context 20 of 20:
+==22479== Use of uninitialised value of size 8
+==22479==    at 0x4F3BB13: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D1BB: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<unsigned long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F3D36C: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, unsigned long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x4F49699: std::ostream& std::ostream::_M_insert<unsigned long>(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==22479==    by 0x403044: operator<<(std::ostream&, WayEntry_p const&) (cacheSim.cpp:90)
+==22479==    by 0x403298: operator<<(std::ostream&, Way_p const&) (cacheSim.cpp:125)
+==22479==    by 0x4035CF: operator<<(std::ostream&, CacheLevel_p const&) (cacheSim.cpp:178)
+==22479==    by 0x403CE8: operator<<(std::ostream&, Cache const&) (cacheSim.cpp:433)
+==22479==    by 0x402C08: main (cacheSim.cpp:554)
+==22479== 
+==22479== ERROR SUMMARY: 296 errors from 20 contexts (suppressed: 0 from 0)
