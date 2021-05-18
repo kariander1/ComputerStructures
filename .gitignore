@@ -25,7 +25,8 @@
 *.la
 *.a
 *.lib
-
+HW3/build/*
+HW3/.vscode/*
 # Executables
 *.exe
 *.out
