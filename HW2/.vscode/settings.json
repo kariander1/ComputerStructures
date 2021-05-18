@@ -1,25 +1,25 @@
 {
     "cmake.debugConfig": {
         "args": [
-            "/home/compm/Desktop/HW/HW2/examples/example1_trace",
+            "~/Desktop/tests/example_trace.txt",
             "--mem-cyc",
-            "100",
+            "19",
             "--bsize",
-            "3",
+            "0",
             "--wr-alloc",
-            "1",
+            "0",
             "--l1-size",
             "4",
             "--l1-assoc",
             "1",
             "--l1-cyc",
-            "1",
+            "7",
             "--l2-size",
-            "6",
+            "5",
             "--l2-assoc",
-            "0",
+            "1",
             "--l2-cyc",
-            "5"
+            "11"
         ]
     },
     "files.associations": {

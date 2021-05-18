@@ -18,50 +18,19 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-#define NOT_USED (-1)	 // for when block hasn't been used yet
-const bool DEBUG = false; // MAKE FALSE BEFORE SUBMISSION!
-unsigned int pseudo_cycle = 0;
+const bool DEBUG_ENABLE = true; // MAKE FALSE BEFORE SUBMISSION!
+unsigned int pseudo_cycle = 0;	// Will represent the simulation cycles for LRU calculation.
+								// Higher pseudo_cycle means that a block was updated more recently
 
-void logDebug(const string &text)
-{
-	if (DEBUG)
-	{
-		std::cout << text;
-	}
-}
-
-/* I Don't think we need this
-class CacheBlock_p
-{
-	time_t last_accessed_time;
-	unsigned tag;
-
-public:
-	CacheBlock_p()
-	{
-		last_accessed_time = NOT_USED;
-		tag = NOT_USED;
-	}
-	~CacheBlock_p() = default;
-	time_t getTime()
-	{
-		return last_accessed_time;
-	}
-	void setTime()
-	{
-		time(&last_accessed_time);
-	}
-	unsigned getTag()
-	{
-		return tag;
-	}
-	void setTag(unsigned new_tag)
-	{
-		tag = new_tag;
-	}
-};
-*/
-typedef struct CacheBlock_p *CacheBlock;
+#define DEBUG(command)                    \
+	do                                    \
+	{                                     \
+		/* safely invoke a system call */ \
+		if (DEBUG_ENABLE)                 \
+		{                                 \
+			command                       \
+		}                                 \
+	} while (0)
 
 class WayEntry_p // Way line (fully associative every way has one set)
 {
@@ -70,36 +39,39 @@ public:
 	bool valid;
 	bool dirty;
 	// No need to save set, since set is the index number
-	//unsigned waze_num_log; //It's a joke, shai
 	unsigned int tag;
-	double last_accessed_time;
-	unsigned long int address;
-	//CacheBlock block;
+	double last_accessed_time; // In units of pseudo cycles
+	unsigned long int address; // Save the actual address that was requested for debugging purposes
+							   // and for making it easier to access different levels later
 
-	WayEntry_p(const unsigned &num_of_sets) : valid(false), dirty(false), tag(0), last_accessed_time(0), address(0){
-																											 //blocks = new CacheBlock[waze_num_log]();
-																										 };
-	~WayEntry_p()
-	{
-		//delete[] blocks;
-	}
+	WayEntry_p(const unsigned &num_of_sets)
+		: valid(false),
+		  dirty(false),
+		  tag(0),
+		  last_accessed_time(0),
+		  address(0){};
 
+	// Print for debugging purposes
 	friend ostream &operator<<(ostream &os, const WayEntry_p &entry)
 	{
 
-		os << entry.valid << " " << std::setfill('0') << std::setw(4) << entry.last_accessed_time << " " << entry.dirty << " 0x" << std::setfill('0') << std::setw(8) << std::hex << entry.tag << ' ' << std::dec;
+		os << entry.valid << " " << std::setfill('0') << std::setw(4) << entry.last_accessed_time << " "
+		   << entry.dirty << " 0x" << std::setfill('0') << std::setw(8)
+		   << std::hex << entry.tag << " (0x" << std::setfill('0') << std::setw(8) << entry.address << std::dec << ')';
 		return os;
 	}
 };
 typedef struct WayEntry_p *WayEntry;
 class Way_p
 {
-	unsigned int num_of_sets;
+
+	unsigned int num_of_sets; // Number of sets in way
 
 public:
-	WayEntry *entries; // index number will be the set number
+	WayEntry *entries; // Entries, set number is index number
 	Way_p(const unsigned &num_of_sets) : num_of_sets(num_of_sets)
 	{
+		// Allocate all sets
 		entries = new WayEntry[num_of_sets];
 		for (size_t i = 0; i < num_of_sets; i++)
 		{
@@ -108,6 +80,7 @@ public:
 	}
 	~Way_p()
 	{
+		// Destruct all sets
 		for (size_t i = 0; i < num_of_sets; i++)
 		{
 			delete entries[i];
@@ -115,9 +88,10 @@ public:
 
 		delete[] entries;
 	}
+	// Print for debugging purposes
 	friend ostream &operator<<(ostream &os, const Way_p &way)
 	{
-		os << "Set V L    D Tag" << endl;
+		os << "Set V LRU  D Tag        (Address)" << endl;
 		for (size_t i = 0; i < way.num_of_sets; i++)
 		{
 			os << i << "   " << (*way.entries[i]) << endl;
@@ -129,32 +103,31 @@ typedef struct Way_p *Way;
 
 class CacheLevel
 {
-	unsigned int num_of_ways;
-	unsigned num_of_blocks; // = cache_size/block_size
-	unsigned num_of_sets;	// = num_of_blocks/num_of_ways
-	unsigned tag_size;		// = 32 - (log2(num_of_sets)) - (log2(block_size))
-	unsigned short cache_num;
-
-	//unsigned int cache_byte_size;
-
-	unsigned int block_size_log;
-	Way *ways;
+	unsigned int num_of_ways;	 // = num of ways in cache level, 2^(LXAssoc)
+	unsigned num_of_blocks;		 // = cache_size/block_size
+	unsigned num_of_sets;		 // = num_of_blocks/num_of_ways
+	unsigned tag_size;			 // = 32 - (log2(num_of_sets)) - (log2(block_size))
+	unsigned short cache_num;	 // Cache number for printing in debug
+	unsigned int block_size_log; //  Block size logarithmic scale
+	Way *ways;					 // Ways in cache level
 
 public:
 	unsigned int num_of_cycles;
 	double miss_count;
 	double access_count;
 	CacheLevel(const unsigned &cache_size_log, const unsigned &waze_num_log, const unsigned &num_of_cycles,
-			   const unsigned &block_size_log, const unsigned &cache_num) : num_of_ways(pow(2, waze_num_log)),
-																			num_of_blocks(pow(2, cache_size_log - block_size_log)),
-																			num_of_sets(num_of_blocks / num_of_ways), // 0 associativeness is Direct-mapping
-																			tag_size(32 - int(log2(num_of_sets)) - block_size_log),
-																			num_of_cycles(num_of_cycles),
-																			block_size_log(block_size_log),
-																			cache_num(cache_num),
-																			miss_count(0),
-																			access_count(0)
+			   const unsigned &block_size_log, const unsigned &cache_num)
+		: num_of_ways(pow(2, waze_num_log)),
+		  num_of_blocks(pow(2, cache_size_log - block_size_log)), // Calc in powers of 2
+		  num_of_sets(num_of_blocks / num_of_ways),				  // 0 associativeness is Direct-mapping
+		  tag_size(32 - int(log2(num_of_sets)) - block_size_log),
+		  num_of_cycles(num_of_cycles),
+		  block_size_log(block_size_log),
+		  cache_num(cache_num),
+		  miss_count(0),
+		  access_count(0)
 	{
+		// Allocate ways
 		ways = new Way[num_of_ways];
 		for (size_t i = 0; i < num_of_ways; i++)
 		{
@@ -163,12 +136,14 @@ public:
 	}
 	~CacheLevel()
 	{
+		// Destruct all ways
 		for (size_t i = 0; i < num_of_ways; i++)
 		{
 			delete ways[i];
 		}
 		delete[] ways;
 	}
+	// Print for debugging purposes
 	friend ostream &operator<<(ostream &os, const CacheLevel &cache_level)
 	{
 
@@ -180,21 +155,25 @@ public:
 		return os;
 	}
 
-	// Check if block associated with given tag exists in SET
+	//blockExists: Check if block associated with given address exists and return it
 	WayEntry blockExists(const unsigned long int &address)
 	{
+		// Get set & tag associated will current address
 		const unsigned int set = getSet(address);
 		const unsigned int tag = getTag(address);
 
 		// Search all ways in the specific set for the requested tag
 		for (int i = 0; i < num_of_ways; i++)
 		{
-			if (DEBUG)
-			{
-				std::cout << "L" << cache_num << " Looking for address " << address << " in way N." << i;
-				std::cout << " With Set N." << set << " Tag " << tag << endl;
-			}
+
+			// Print for debugging
+			DEBUG(std::cout << "L" << cache_num << " Looking for address 0x" <<std::hex << address << " in way N." << i;
+				  std::cout << " With Set N." << set << " Tag " << tag << endl;);
+
+			// Foreach entry, fetch the relevant entry with the set number
 			WayEntry entry = ways[i]->entries[set];
+
+			// If block is valig and the tag equals, then this is a requested block
 			if (entry->valid && entry->tag == tag)
 			{
 				// HIT!
@@ -204,45 +183,30 @@ public:
 		// MISS!
 		return NULL;
 	}
-	/*
-	bool isBlockInSet(unsigned tag)
-	{
-		
-		for (int i = 0; i < num_of_ways; i++)
-		{
-			if (ways[i]->entries getTag() == tag)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-*/
-	// Insert new block to SET according to LRU rules.
 
+	//getEntryForNewBlock: Get an entry to allocate for a new address.
+	// Returns the entry that is the victim or an empty entry that can be allocated
 	WayEntry getEntryForNewBlock(const unsigned int &address)
 	{
+		// Get set & tag associated will current address
 		const unsigned int set = getSet(address);
 		const unsigned int tag = getTag(address);
-
-		WayEntry entry_to_update;
 		unsigned int last_block_time = __UINT32_MAX__;
+		WayEntry entry_to_update;
+
 		for (int i = 0; i < num_of_ways; i++)
 		{
+			// Foreqch way, check the current entry in the set associated with the address
 			WayEntry entry = ways[i]->entries[set];
 
 			if (!entry->valid)
 			{
-				// Found an unused way
-				//blocks[i]->setTime();
-				//blocks[i]->setTag(tag);
-				//entry->tag = tag;
-				//entry->valid = true;
-				//entry->last_accessed_time= time(NULL);
-				return entry; // Return NULL since Cache doesn't need to do anything with line evicted
+				// Found an unused block!
+				return entry;
 			}
 			else
 			{
+				// Check if current block is used later
 				if (entry->last_accessed_time < last_block_time)
 				{
 					//current block time < last block time
@@ -251,28 +215,9 @@ public:
 				}
 			}
 		}
-		// update last block time and tag
-		// Might need to evict block!
 
-		//	entry_to_update->last_accessed_time = pseudo_cycle;
-		//	entry_to_update->tag = tag;
 		return entry_to_update;
 	}
-
-	// update an existing block associated with given tag
-	/*
-	void updateExistingBlock(unsigned tag)
-	{
-		for (int i = 0; i < waze_num_log; i++)
-		{
-			if (blocks[i]->getTag() == tag)
-			{
-				blocks[i]->setTime();
-				return;
-			}
-		}
-	}
-	*/
 	// Get matching set according to memory address
 	unsigned int getSet(unsigned long int address)
 	{
@@ -281,51 +226,50 @@ public:
 		address = address >> (block_size_log);
 		const unsigned int mask = (1 << int(log2(num_of_sets))) - 1;
 
+		// Apply mask
 		return (address & mask);
 	}
 	// Get tag from address
 	unsigned getTag(unsigned long int address)
 	{
+		// Shift right according to num of bits reserved to set and offset bits
 		unsigned offset_and_set_bits = 32 - tag_size;
 		return (address >> offset_and_set_bits);
 	}
 };
 
+// Enumrable for Write-Miss policy
 enum WritePolicy
 {
-	WRITE_ERROR_MIN,
 	NO_WRITE_ALLOCATE = 0,
 	WRITE_ALLOCATE = 1,
-	WRITE_ERROR_MAX
 };
+
+// Class representating the whole cache memory with both levels
 class Cache
 {
 
 	WritePolicy write_policy;
-	//unsigned write_policy;
 
 public:
-	double L1MissRate;
-	double L2MissRate;
-	double avgAccTime;
-	double t_access;
-	unsigned MemCyc;
-	CacheLevel L1;
-	CacheLevel L2;
+	double t_access_total; // Total access time in cache
+	unsigned MemCyc;	   // Cycles we need to access memory
+	CacheLevel L1;		   // L1 cache
+	CacheLevel L2;		   // L2 cache
 
 	Cache(const unsigned &MemCyc, const unsigned &BSize, const unsigned &L1Size, const unsigned &L2Size,
 		  const unsigned &L1Assoc, const unsigned &L2Assoc, const unsigned &L1Cyc,
-		  const unsigned &L2Cyc, const unsigned &WrAlloc) : t_access(0), MemCyc(MemCyc),
-															write_policy(static_cast<WritePolicy>(WrAlloc)), L1MissRate(0), L2MissRate(0),
-															avgAccTime(0),
-															L1(CacheLevel(L1Size, L1Assoc, L1Cyc, BSize, 1)),
-															L2(CacheLevel(L2Size, L2Assoc, L2Cyc, BSize, 2))
+		  const unsigned &L2Cyc, const unsigned &WrAlloc)
+		: t_access_total(0), MemCyc(MemCyc),
+		  write_policy(static_cast<WritePolicy>(WrAlloc)),
+		  L1(CacheLevel(L1Size, L1Assoc, L1Cyc, BSize, 1)),
+		  L2(CacheLevel(L2Size, L2Assoc, L2Cyc, BSize, 2))
 	{
 	}
-	~Cache() = default; // Will call d'tor automatically of cache levels
-
+	// Special handling of fetching a block to L1. Return the entry that was created due to this operation
 	WayEntry fetchToL1(const unsigned long int &address)
 	{
+		// Find a victim/new block for the new address
 		WayEntry l1_victim = L1.getEntryForNewBlock(address);
 		if (l1_victim->valid)
 		{
@@ -335,11 +279,13 @@ public:
 			if (l1_victim->dirty)
 			{
 				// Due to inclusiveness
-				std::cout << "L1 Victim is dirty! Change record in L2 to dirty" << std::endl ;
+				DEBUG(std::cout << "L1 Victim is dirty! Change record in L2 to dirty and updating LRU" << std::endl;);
+
 				entry_l2->dirty = true;
+				entry_l2->last_accessed_time = pseudo_cycle;
 			}
 		}
-		// If entry was invalid OR entry was valid but not dirty, we'll get here immediately
+		// If entry was invalid we'll get here immediately, perform here the actual getching of the new block:
 		l1_victim->valid = true;
 		l1_victim->tag = L1.getTag(address);
 		l1_victim->last_accessed_time = pseudo_cycle;
@@ -347,125 +293,123 @@ public:
 		l1_victim->dirty = false;
 		return l1_victim;
 	}
+	// fetchBlockFromMemory: fetch a new memory block from memory to both L1 & L2
+	// Return the L1 victim/block that was evicted and allocated
 	WayEntry fetchBlockFromMemory(const unsigned long int &address)
 	{
 		// Fetch block from memory to L2 and L1
 
+		// First fetch the block to L1
 		WayEntry l1_victim = fetchToL1(address);
+
+		// Find a victim/new block to L2:
 		WayEntry l2_victim = L2.getEntryForNewBlock(address);
 		if (l2_victim->valid)
 		{
 			// There was a valid entry in L2!
 			// Need to evict it to memory..
 			// First check if the line is dirty in L1
+			DEBUG(std::cout << "L2 Found Victim! "<< *l2_victim<<" Searching if block exists in L1" << std::endl;);
 
-			if (DEBUG)
-			{
-				std::cout << "L2 Found Victim! Searching if block exists in L1" << std::endl ;
-			}
+			// Search the victim in L1 cache:
 			WayEntry entry_l1 = L1.blockExists(l2_victim->address);
 			if (entry_l1)
 			{
-					if (DEBUG)
-					{
-						std::cout << "Evicted block from L2 Exists in L1, invalidate it" << std::endl ;
-					}
-				// Oh dear.. in L1 the line that is about to get evicted exists and is valid, ivalidate it
-				// And update L2 with the data from L1
+				// Oh dear.. in L1 the line that is about to get evicted from L2 exists and is valid, ivalidate it
+				DEBUG(std::cout << "Evicted block from L2 Exists in L1, invalidate it" << std::endl;);
 				entry_l1->valid = false;
-
-				// If we are about to update L2 with the new data, should access time update?
-				// I think not..
 			}
 		}
 
+		// Perform the actual fetch
 		l2_victim->valid = true;
 		l2_victim->tag = L2.getTag(address);
 		l2_victim->last_accessed_time = pseudo_cycle;
 		l2_victim->address = address;
 		l2_victim->dirty = false;
-		// Should change to dirty as well?
 
-		// From this stage, the entry in L2 is updated, should update also L1:
 		return l1_victim;
 	}
+	// cacheRead: perform a cacheRead operation
 	void cacheRead(const unsigned long int &address)
 	{
-		t_access += L1.num_of_cycles;
+		// We access L1 first, so increment with its cycles
+		t_access_total += L1.num_of_cycles;
 		L1.access_count++;
+
+		// Search block in L1
 		WayEntry requested_entry = L1.blockExists(address);
 		if (!requested_entry)
 		{
-			if (DEBUG)
-			{
-				std::cout << "L1 Read Miss!" << std::endl ;
-			}
 			// L1 Read Miss! Try next level
+			DEBUG(std::cout << "L1 Read Miss!" << std::endl;);
 			L1.miss_count++;
-			t_access += L2.num_of_cycles;
+
+			// About to access L2, increment its cycles
+			t_access_total += L2.num_of_cycles;
 			L2.access_count++;
+
+			// Search for block in L2:
 			requested_entry = L2.blockExists(address);
 			if (!requested_entry)
 			{
-				if (DEBUG)
-				{
-					std::cout << "L2 Read Miss!" << std::endl ;
-				}
 				// L2 Read Miss! Access memory
+				DEBUG(std::cout << "L2 Read Miss!" << std::endl;);
 				L2.miss_count++;
-				t_access += MemCyc;
+				t_access_total += MemCyc;
+				// Need to fetch block to both levels:
 				fetchBlockFromMemory(address);
 			}
 			else
 			{
-				if (DEBUG)
-				{
-					std::cout << "L2 HIT!" << std::endl ;
-				}
 				// L2 HIT!
 				// This updates L1 with cache line
+				DEBUG(std::cout << "L2 HIT!" << std::endl;);
 
+				// There was a HIT in L2, therfore we need to copy the block to L1 as well
 				fetchToL1(address);
+				// Hit in L2, we update the LRU
 				requested_entry->last_accessed_time = pseudo_cycle;
 			}
 		}
 		else
 		{
-			if (DEBUG)
-			{
-				std::cout << "L1 HIT!" << std::endl ;
-			}
+			DEBUG(std::cout << "L1 HIT!" << std::endl;);
+
 			// L1 HIT!
+			// Update LRU:
 			requested_entry->last_accessed_time = pseudo_cycle;
 		}
 		return;
 	}
+	// cacheWrite: perform a cacheWrite operation
 	void cacheWrite(const unsigned long int &address)
 	{
 		// Always access L1
-		t_access += L1.num_of_cycles;
+		t_access_total += L1.num_of_cycles;
 		L1.access_count++;
+
+		// Search or block in L1:
 		WayEntry requested_entry = L1.blockExists(address);
 		if (!requested_entry)
 		{
-			if (DEBUG)
-			{
-				std::cout << "L1 Write Miss!" << std::endl ;
-			}
-			L1.miss_count++;
 			// L1 Write Miss! Try next level
-			t_access += L2.num_of_cycles;
+			DEBUG(std::cout << "L1 Write Miss!" << std::endl;);
+			L1.miss_count++;
+			t_access_total += L2.num_of_cycles;
 			L2.access_count++;
+
+			// Search block in L2:
 			requested_entry = L2.blockExists(address);
 			if (!requested_entry)
 			{
-				if (DEBUG)
-				{
-					std::cout << "L2 Write Miss!" << std::endl ;
-				}
 				// L2 Write Miss! Access memory
+				DEBUG(std::cout << "L2 Write Miss!" << std::endl;);
 				L2.miss_count++;
-				t_access += MemCyc;
+				t_access_total += MemCyc;
+
+				// If we are in WRITE_ALLOCATE then we should fetch block to both levels,
+				// and mark entry as dirty in L1 since we write to it
 				if (write_policy == WRITE_ALLOCATE)
 				{
 					fetchBlockFromMemory(address)->dirty = true;
@@ -473,14 +417,11 @@ public:
 			}
 			else
 			{
-
-				if (DEBUG)
-				{
-					std::cout << "L2 HIT!" << std::endl ;
-				}
 				// L2 HIT! We are in write-back policy, make entry dirty in L2
 				// This block didn't exist in L1, so no need to perform any updates
-				//
+				DEBUG(std::cout << "L2 HIT!" << std::endl;);
+
+				// If we are in NO_WRITE_ALLOCATE policy then we don't bring the block to L1, therefore L2 is dirty
 				if (write_policy == NO_WRITE_ALLOCATE)
 				{
 					requested_entry->dirty = true;
@@ -490,21 +431,20 @@ public:
 					// Write block to L1 as well
 					fetchToL1(address)->dirty = true;
 				}
+				// update LRU
 				requested_entry->last_accessed_time = pseudo_cycle;
 			}
 		}
 		else
 		{
-			if (DEBUG)
-			{
-				std::cout << "L1 HIT!" << std::endl ;
-			}
 			// L1 HIT! We are in write-back policy, make entry dirty
+			DEBUG(std::cout << "L1 HIT!" << std::endl;);
 			requested_entry->dirty = true;
 			requested_entry->last_accessed_time = pseudo_cycle;
 		}
 		return;
 	}
+	// Print for debug
 	friend ostream &operator<<(ostream &os, const Cache &cache)
 	{
 		os << "-----------------------------------------------------------------" << endl;
@@ -608,39 +548,39 @@ int main(int argc, char **argv)
 		}
 
 		// DEBUG - remove this line
-		cout << "operation: " << operation;
+		DEBUG(cout << "operation: " << operation;);
 
 		string cutAddress = address.substr(2); // Removing the "0x" part of the address
 
 		// DEBUG - remove this line
-		cout << ", address (hex)" << cutAddress;
+		DEBUG(cout << ", address (hex)" << cutAddress;);
 
 		unsigned long int num = 0;
 		num = strtoul(cutAddress.c_str(), NULL, 16);
 
 		// DEBUG - remove this line
-		cout << " (dec) " << num << endl;
+		DEBUG(cout << " (dec) " << num << endl;);
 
 		switch (operation)
 		{
 		case 'r':
-			cache.cacheRead(num); // Lior
+			cache.cacheRead(num);
 			break;
 		case 'w':
-			cache.cacheWrite(num); // Shai
+			cache.cacheWrite(num);
 			break;
 		}
 
-		if (DEBUG)
-		{
-			std::cout << cache;
-		}
+		DEBUG(std::cout << cache;);
+		DEBUG(printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count););
+		DEBUG(printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count););
+		DEBUG(printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count););
 		pseudo_cycle++;
 	}
 
 	printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count);
 	printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count);
-	printf("AccTimeAvg=%.03f\n", cache.t_access / cache.L1.access_count);
+	printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count);
 
 	return 0;
 }

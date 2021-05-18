@@ -1,0 +1,19 @@
+Reading the opcodes latency info from /home/compm/046267-comp-arch/w21/hw3-ooo/testenv/tests/opcode14.dat ... Got latency for 17 opcodes
+Reading the program file /home/compm/046267-comp-arch/w21/hw3-ooo/testenv/tests/example14.in ... Found 63 instructions
+getProgDepth()==71
+getDepDepth(1)==0
+getInstDeps(0)=={-1,-1}
+getDepDepth(2)==0
+getInstDeps(1)=={-1,-1}
+getDepDepth(3)==0
+getInstDeps(2)=={-1,-1}
+getDepDepth(4)==0
+getInstDeps(3)=={-1,-1}
+getDepDepth(5)==4
+getInstDeps(4)=={-1,-1}
+getDepDepth(6)==4
+getInstDeps(5)=={-1,2}
+getDepDepth(7)==0
+getInstDeps(6)=={-1,2}
+getDepDepth(8)==13
+getInstDeps(7)=={-1,-1}

@@ -1,0 +1,246 @@
+operation: w, address (hex)00000000 (dec) 0
+L1 Looking for address 0 in way N.0 With Set N.0 Tag 0
+L1 Looking for address 0 in way N.1 With Set N.0 Tag 0
+L1 Write Miss!
+L2 Looking for address 0 in way N.0 With Set N.0 Tag 0
+L2 Looking for address 0 in way N.1 With Set N.0 Tag 0
+L2 Looking for address 0 in way N.2 With Set N.0 Tag 0
+L2 Looking for address 0 in way N.3 With Set N.0 Tag 0
+L2 Write Miss!
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0000 1 0x00000000 (0x00000000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+
+-----------------------------------------------------------------
+operation: r, address (hex)00010000 (dec) 65536
+L1 Looking for address 65536 in way N.0 With Set N.0 Tag 8192
+L1 Looking for address 65536 in way N.1 With Set N.0 Tag 8192
+L1 Read Miss!
+L2 Looking for address 65536 in way N.0 With Set N.0 Tag 16384
+L2 Looking for address 65536 in way N.1 With Set N.0 Tag 16384
+L2 Looking for address 65536 in way N.2 With Set N.0 Tag 16384
+L2 Looking for address 65536 in way N.3 With Set N.0 Tag 16384
+L2 Read Miss!
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0000 1 0x00000000 (0x00000000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0001 0 0x00002000 (0x00010000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0001 0 0x00004000 (0x00010000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+
+-----------------------------------------------------------------
+operation: r, address (hex)00020000 (dec) 131072
+L1 Looking for address 131072 in way N.0 With Set N.0 Tag 16384
+L1 Looking for address 131072 in way N.1 With Set N.0 Tag 16384
+L1 Read Miss!
+L2 Looking for address 131072 in way N.0 With Set N.0 Tag 32768
+L2 Looking for address 131072 in way N.1 With Set N.0 Tag 32768
+L2 Looking for address 131072 in way N.2 With Set N.0 Tag 32768
+L2 Looking for address 131072 in way N.3 With Set N.0 Tag 32768
+L2 Read Miss!
+L2 Looking for address 0 in way N.0 With Set N.0 Tag 0
+L1 Victim is dirty! Change record in L2 to dirty and updating LRU
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00004000 (0x00020000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0001 0 0x00002000 (0x00010000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0002 1 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0001 0 0x00004000 (0x00010000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00008000 (0x00020000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   0 0000 0 0x00000000 (0x00000000)
+
+-----------------------------------------------------------------
+operation: r, address (hex)00030000 (dec) 196608
+L1 Looking for address 196608 in way N.0 With Set N.0 Tag 24576
+L1 Looking for address 196608 in way N.1 With Set N.0 Tag 24576
+L1 Read Miss!
+L2 Looking for address 196608 in way N.0 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.1 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.2 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.3 With Set N.0 Tag 49152
+L2 Read Miss!
+L2 Looking for address 65536 in way N.0 With Set N.0 Tag 16384
+L2 Looking for address 65536 in way N.1 With Set N.0 Tag 16384
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00004000 (0x00020000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0003 0 0x00006000 (0x00030000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0002 1 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0001 0 0x00004000 (0x00010000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00008000 (0x00020000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   1 0003 0 0x0000c000 (0x00030000)
+
+-----------------------------------------------------------------
+operation: r, address (hex)00040000 (dec) 262144
+L1 Looking for address 262144 in way N.0 With Set N.0 Tag 32768
+L1 Looking for address 262144 in way N.1 With Set N.0 Tag 32768
+L1 Read Miss!
+L2 Looking for address 262144 in way N.0 With Set N.0 Tag 65536
+L2 Looking for address 262144 in way N.1 With Set N.0 Tag 65536
+L2 Looking for address 262144 in way N.2 With Set N.0 Tag 65536
+L2 Looking for address 262144 in way N.3 With Set N.0 Tag 65536
+L2 Read Miss!
+L2 Looking for address 131072 in way N.0 With Set N.0 Tag 32768
+L2 Looking for address 131072 in way N.1 With Set N.0 Tag 32768
+L2 Looking for address 131072 in way N.2 With Set N.0 Tag 32768
+L2 Found Victim! Searching if block exists in L1
+L1 Looking for address 65536 in way N.0 With Set N.0 Tag 8192
+L1 Looking for address 65536 in way N.1 With Set N.0 Tag 8192
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0004 0 0x00008000 (0x00040000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0003 0 0x00006000 (0x00030000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0002 1 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0004 0 0x00010000 (0x00040000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00008000 (0x00020000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   1 0003 0 0x0000c000 (0x00030000)
+
+-----------------------------------------------------------------
+operation: r, address (hex)00000000 (dec) 0
+L1 Looking for address 0 in way N.0 With Set N.0 Tag 0
+L1 Looking for address 0 in way N.1 With Set N.0 Tag 0
+L1 Read Miss!
+L2 Looking for address 0 in way N.0 With Set N.0 Tag 0
+L2 HIT!
+L2 Looking for address 196608 in way N.0 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.1 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.2 With Set N.0 Tag 49152
+L2 Looking for address 196608 in way N.3 With Set N.0 Tag 49152
+-----------------------------------------------------------------
+Cache L1
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0004 0 0x00008000 (0x00040000)
+1   0 0000 0 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0005 0 0x00000000 (0x00000000)
+1   0 0000 0 0x00000000 (0x00000000)
+
+
+-----------------------------------------------------------------
+Cache L2
+
+		WAY 0
+Set V LRU  D Tag        (Address)
+0   1 0005 1 0x00000000 (0x00000000)
+		WAY 1
+Set V LRU  D Tag        (Address)
+0   1 0004 0 0x00010000 (0x00040000)
+		WAY 2
+Set V LRU  D Tag        (Address)
+0   1 0002 0 0x00008000 (0x00020000)
+		WAY 3
+Set V LRU  D Tag        (Address)
+0   1 0003 0 0x0000c000 (0x00030000)
+
+-----------------------------------------------------------------
+L1miss=1.000 L2miss=0.833 AccTimeAvg=14.333
