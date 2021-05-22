@@ -173,6 +173,19 @@ ContinuousSubmit/fast:
 .PHONY : ContinuousSubmit/fast
 
 #=============================================================================
+# Target rules for targets named CacheSimNoam
+
+# Build rule for target.
+CacheSimNoam: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CacheSimNoam
+.PHONY : CacheSimNoam
+
+# fast build rule for target.
+CacheSimNoam/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/build
+.PHONY : CacheSimNoam/fast
+
+#=============================================================================
 # Target rules for targets named ContinuousCoverage
 
 # Build rule for target.
@@ -547,6 +560,30 @@ cacheSim.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSim.dir/build.make CMakeFiles/CacheSim.dir/cacheSim.cpp.s
 .PHONY : cacheSim.cpp.s
 
+cacheSimNoam.o: cacheSimNoam.cpp.o
+.PHONY : cacheSimNoam.o
+
+# target to build an object file
+cacheSimNoam.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o
+.PHONY : cacheSimNoam.cpp.o
+
+cacheSimNoam.i: cacheSimNoam.cpp.i
+.PHONY : cacheSimNoam.i
+
+# target to preprocess a source file
+cacheSimNoam.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.i
+.PHONY : cacheSimNoam.cpp.i
+
+cacheSimNoam.s: cacheSimNoam.cpp.s
+.PHONY : cacheSimNoam.s
+
+# target to generate assembly for a file
+cacheSimNoam.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.s
+.PHONY : cacheSimNoam.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -587,9 +624,13 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... CacheSim"
+	@echo "... CacheSimNoam"
 	@echo "... cacheSim.o"
 	@echo "... cacheSim.i"
 	@echo "... cacheSim.s"
+	@echo "... cacheSimNoam.o"
+	@echo "... cacheSimNoam.i"
+	@echo "... cacheSimNoam.s"
 .PHONY : help
 
 

@@ -4,7 +4,15 @@ project(CacheSim VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
+list(APPEND flags "-std=c++11")
+
 add_executable(CacheSim cacheSim.cpp)
+add_executable(CacheSimNoam cacheSimNoam.cpp)
+
+target_compile_options(CacheSimNoam
+PRIVATE
+  ${flags}
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

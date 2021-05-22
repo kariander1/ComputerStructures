@@ -282,13 +282,13 @@ public:
 				DEBUG(std::cout << "L1 Victim is dirty! Change record in L2 to dirty and updating LRU" << std::endl;);
 
 				entry_l2->dirty = true;
-				entry_l2->last_accessed_time = pseudo_cycle;
+				entry_l2->last_accessed_time = pseudo_cycle++;
 			}
 		}
 		// If entry was invalid we'll get here immediately, perform here the actual getching of the new block:
 		l1_victim->valid = true;
 		l1_victim->tag = L1.getTag(address);
-		l1_victim->last_accessed_time = pseudo_cycle;
+		l1_victim->last_accessed_time = pseudo_cycle++;
 		l1_victim->address = address;
 		l1_victim->dirty = false;
 		return l1_victim;
@@ -324,7 +324,7 @@ public:
 		// Perform the actual fetch
 		l2_victim->valid = true;
 		l2_victim->tag = L2.getTag(address);
-		l2_victim->last_accessed_time = pseudo_cycle;
+		l2_victim->last_accessed_time = pseudo_cycle++;
 		l2_victim->address = address;
 		l2_victim->dirty = false;
 
@@ -369,7 +369,7 @@ public:
 				// There was a HIT in L2, therfore we need to copy the block to L1 as well
 				fetchToL1(address);
 				// Hit in L2, we update the LRU
-				requested_entry->last_accessed_time = pseudo_cycle;
+				requested_entry->last_accessed_time = pseudo_cycle++;
 			}
 		}
 		else
@@ -378,7 +378,7 @@ public:
 
 			// L1 HIT!
 			// Update LRU:
-			requested_entry->last_accessed_time = pseudo_cycle;
+			requested_entry->last_accessed_time = pseudo_cycle++;
 		}
 		return;
 	}
@@ -432,7 +432,7 @@ public:
 					fetchToL1(address)->dirty = true;
 				}
 				// update LRU
-				requested_entry->last_accessed_time = pseudo_cycle;
+				requested_entry->last_accessed_time = pseudo_cycle++;
 			}
 		}
 		else
@@ -440,7 +440,7 @@ public:
 			// L1 HIT! We are in write-back policy, make entry dirty
 			DEBUG(std::cout << "L1 HIT!" << std::endl;);
 			requested_entry->dirty = true;
-			requested_entry->last_accessed_time = pseudo_cycle;
+			requested_entry->last_accessed_time = pseudo_cycle++;
 		}
 		return;
 	}
@@ -572,15 +572,15 @@ int main(int argc, char **argv)
 		}
 
 		DEBUG(std::cout << cache;);
-		DEBUG(printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count););
-		DEBUG(printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count););
-		DEBUG(printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count););
-		pseudo_cycle++;
+		DEBUG(printf("L1miss=%.06f ", cache.L1.miss_count / cache.L1.access_count););
+		DEBUG(printf("L2miss=%.06f ", cache.L2.miss_count / cache.L2.access_count););
+		DEBUG(printf("AccTimeAvg=%.06f\n", cache.t_access_total / cache.L1.access_count););
+		
 	}
 
-	printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count);
-	printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count);
-	printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count);
+	printf("L1miss=%.06f ", cache.L1.miss_count / cache.L1.access_count);
+	printf("L2miss=%.06f ", cache.L2.miss_count / cache.L2.access_count);
+	printf("AccTimeAvg=%.06f\n", cache.t_access_total / cache.L1.access_count);
 
 	return 0;
 }

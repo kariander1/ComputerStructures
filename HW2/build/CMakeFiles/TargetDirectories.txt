@@ -2,6 +2,7 @@
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/edit_cache.dir
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/CacheSim.dir
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/ContinuousSubmit.dir
+/home/compm/Desktop/HW/HW2/build/CMakeFiles/CacheSimNoam.dir
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/ContinuousCoverage.dir
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/ContinuousTest.dir
 /home/compm/Desktop/HW/HW2/build/CMakeFiles/ContinuousBuild.dir
