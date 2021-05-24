@@ -147,6 +147,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named CacheSimRoy
+
+# Build rule for target.
+CacheSimRoy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CacheSimRoy
+.PHONY : CacheSimRoy
+
+# fast build rule for target.
+CacheSimRoy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/build
+.PHONY : CacheSimRoy/fast
+
+#=============================================================================
 # Target rules for targets named CacheSim
 
 # Build rule for target.
@@ -171,19 +184,6 @@ ContinuousSubmit: cmake_check_build_system
 ContinuousSubmit/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/build
 .PHONY : ContinuousSubmit/fast
-
-#=============================================================================
-# Target rules for targets named CacheSimNoam
-
-# Build rule for target.
-CacheSimNoam: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CacheSimNoam
-.PHONY : CacheSimNoam
-
-# fast build rule for target.
-CacheSimNoam/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/build
-.PHONY : CacheSimNoam/fast
 
 #=============================================================================
 # Target rules for targets named ContinuousCoverage
@@ -560,29 +560,29 @@ cacheSim.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSim.dir/build.make CMakeFiles/CacheSim.dir/cacheSim.cpp.s
 .PHONY : cacheSim.cpp.s
 
-cacheSimNoam.o: cacheSimNoam.cpp.o
-.PHONY : cacheSimNoam.o
+cacheSimRoy.o: cacheSimRoy.cpp.o
+.PHONY : cacheSimRoy.o
 
 # target to build an object file
-cacheSimNoam.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o
-.PHONY : cacheSimNoam.cpp.o
+cacheSimRoy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/cacheSimRoy.cpp.o
+.PHONY : cacheSimRoy.cpp.o
 
-cacheSimNoam.i: cacheSimNoam.cpp.i
-.PHONY : cacheSimNoam.i
+cacheSimRoy.i: cacheSimRoy.cpp.i
+.PHONY : cacheSimRoy.i
 
 # target to preprocess a source file
-cacheSimNoam.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.i
-.PHONY : cacheSimNoam.cpp.i
+cacheSimRoy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/cacheSimRoy.cpp.i
+.PHONY : cacheSimRoy.cpp.i
 
-cacheSimNoam.s: cacheSimNoam.cpp.s
-.PHONY : cacheSimNoam.s
+cacheSimRoy.s: cacheSimRoy.cpp.s
+.PHONY : cacheSimRoy.s
 
 # target to generate assembly for a file
-cacheSimNoam.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.s
-.PHONY : cacheSimNoam.cpp.s
+cacheSimRoy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/cacheSimRoy.cpp.s
+.PHONY : cacheSimRoy.cpp.s
 
 # Help Target
 help:
@@ -624,13 +624,13 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... CacheSim"
-	@echo "... CacheSimNoam"
+	@echo "... CacheSimRoy"
 	@echo "... cacheSim.o"
 	@echo "... cacheSim.i"
 	@echo "... cacheSim.s"
-	@echo "... cacheSimNoam.o"
-	@echo "... cacheSimNoam.i"
-	@echo "... cacheSimNoam.s"
+	@echo "... cacheSimRoy.o"
+	@echo "... cacheSimRoy.i"
+	@echo "... cacheSimRoy.s"
 .PHONY : help
 
 

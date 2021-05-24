@@ -7,9 +7,9 @@ enable_testing()
 list(APPEND flags "-std=c++11")
 
 add_executable(CacheSim cacheSim.cpp)
-add_executable(CacheSimNoam cacheSimNoam.cpp)
+add_executable(CacheSimRoy cacheSimRoy.cpp)
 
-target_compile_options(CacheSimNoam
+target_compile_options(CacheSimRoy
 PRIVATE
   ${flags}
 )

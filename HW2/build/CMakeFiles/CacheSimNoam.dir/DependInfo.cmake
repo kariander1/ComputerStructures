@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/compm/Desktop/HW/HW2/cacheSimNoam.cpp" "CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o" "gcc" "CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o.d"
+  "/home/compm/Desktop/HW/HW2/cacheSimRoy.cpp" "CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o" "gcc" "CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o.d"
   )
 
 # Targets to which this target links.

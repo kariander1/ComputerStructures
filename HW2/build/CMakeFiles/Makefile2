@@ -63,8 +63,8 @@ CMAKE_BINARY_DIR = /home/compm/Desktop/HW/HW2/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/CacheSimRoy.dir/all
 all: CMakeFiles/CacheSim.dir/all
-all: CMakeFiles/CacheSimNoam.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -72,9 +72,9 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/CacheSimRoy.dir/clean
 clean: CMakeFiles/CacheSim.dir/clean
 clean: CMakeFiles/ContinuousSubmit.dir/clean
-clean: CMakeFiles/CacheSimNoam.dir/clean
 clean: CMakeFiles/ContinuousCoverage.dir/clean
 clean: CMakeFiles/ContinuousTest.dir/clean
 clean: CMakeFiles/ContinuousBuild.dir/clean
@@ -103,6 +103,32 @@ clean: CMakeFiles/ExperimentalSubmit.dir/clean
 clean: CMakeFiles/ContinuousStart.dir/clean
 clean: CMakeFiles/ContinuousUpdate.dir/clean
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/CacheSimRoy.dir
+
+# All Build rule for target.
+CMakeFiles/CacheSimRoy.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=3,4 "Built target CacheSimRoy"
+.PHONY : CMakeFiles/CacheSimRoy.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/CacheSimRoy.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CacheSimRoy.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 0
+.PHONY : CMakeFiles/CacheSimRoy.dir/rule
+
+# Convenience name for target.
+CacheSimRoy: CMakeFiles/CacheSimRoy.dir/rule
+.PHONY : CacheSimRoy
+
+# clean rule for target.
+CMakeFiles/CacheSimRoy.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/clean
+.PHONY : CMakeFiles/CacheSimRoy.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/CacheSim.dir
@@ -155,32 +181,6 @@ ContinuousSubmit: CMakeFiles/ContinuousSubmit.dir/rule
 CMakeFiles/ContinuousSubmit.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/clean
 .PHONY : CMakeFiles/ContinuousSubmit.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/CacheSimNoam.dir
-
-# All Build rule for target.
-CMakeFiles/CacheSimNoam.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=3,4 "Built target CacheSimNoam"
-.PHONY : CMakeFiles/CacheSimNoam.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/CacheSimNoam.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/CacheSimNoam.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 0
-.PHONY : CMakeFiles/CacheSimNoam.dir/rule
-
-# Convenience name for target.
-CacheSimNoam: CMakeFiles/CacheSimNoam.dir/rule
-.PHONY : CacheSimNoam
-
-# clean rule for target.
-CMakeFiles/CacheSimNoam.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimNoam.dir/build.make CMakeFiles/CacheSimNoam.dir/clean
-.PHONY : CMakeFiles/CacheSimNoam.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/ContinuousCoverage.dir

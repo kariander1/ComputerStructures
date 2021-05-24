@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o"
-  "CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o.d"
+  "CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o"
+  "CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o.d"
   "CacheSimNoam"
   "CacheSimNoam.pdb"
 )

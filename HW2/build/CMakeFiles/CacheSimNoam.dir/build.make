@@ -69,28 +69,28 @@ include CMakeFiles/CacheSimNoam.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/CacheSimNoam.dir/flags.make
 
-CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o: CMakeFiles/CacheSimNoam.dir/flags.make
-CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o: ../cacheSimNoam.cpp
-CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o: CMakeFiles/CacheSimNoam.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o"
-	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o -MF CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o.d -o CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSimNoam.cpp
+CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o: CMakeFiles/CacheSimNoam.dir/flags.make
+CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o: ../cacheSimRoy.cpp
+CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o: CMakeFiles/CacheSimNoam.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o"
+	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o -MF CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o.d -o CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSimRoy.cpp
 
-CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.i"
-	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/compm/Desktop/HW/HW2/cacheSimNoam.cpp > CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.i
+CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.i"
+	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/compm/Desktop/HW/HW2/cacheSimRoy.cpp > CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.i
 
-CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.s"
-	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/compm/Desktop/HW/HW2/cacheSimNoam.cpp -o CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.s
+CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.s"
+	/usr/bin/x86_64-linux-gnu-g++-5 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/compm/Desktop/HW/HW2/cacheSimRoy.cpp -o CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.s
 
 # Object files for target CacheSimNoam
 CacheSimNoam_OBJECTS = \
-"CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o"
+"CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o"
 
 # External object files for target CacheSimNoam
 CacheSimNoam_EXTERNAL_OBJECTS =
 
-CacheSimNoam: CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o
+CacheSimNoam: CMakeFiles/CacheSimNoam.dir/cacheSimRoy.cpp.o
 CacheSimNoam: CMakeFiles/CacheSimNoam.dir/build.make
 CacheSimNoam: CMakeFiles/CacheSimNoam.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable CacheSimNoam"

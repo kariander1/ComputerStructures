@@ -18,7 +18,7 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-const bool DEBUG_ENABLE = true; // MAKE FALSE BEFORE SUBMISSION!
+const bool DEBUG_ENABLE = false; // MAKE FALSE BEFORE SUBMISSION!
 unsigned int pseudo_cycle = 0;	// Will represent the simulation cycles for LRU calculation.
 								// Higher pseudo_cycle means that a block was updated more recently
 
@@ -572,15 +572,15 @@ int main(int argc, char **argv)
 		}
 
 		DEBUG(std::cout << cache;);
-		DEBUG(printf("L1miss=%.06f ", cache.L1.miss_count / cache.L1.access_count););
-		DEBUG(printf("L2miss=%.06f ", cache.L2.miss_count / cache.L2.access_count););
-		DEBUG(printf("AccTimeAvg=%.06f\n", cache.t_access_total / cache.L1.access_count););
+		DEBUG(printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count););
+		DEBUG(printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count););
+		DEBUG(printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count););
 		
 	}
 
-	printf("L1miss=%.06f ", cache.L1.miss_count / cache.L1.access_count);
-	printf("L2miss=%.06f ", cache.L2.miss_count / cache.L2.access_count);
-	printf("AccTimeAvg=%.06f\n", cache.t_access_total / cache.L1.access_count);
+	printf("L1miss=%.03f ", cache.L1.miss_count / cache.L1.access_count);
+	printf("L2miss=%.03f ", cache.L2.miss_count / cache.L2.access_count);
+	printf("AccTimeAvg=%.03f\n", cache.t_access_total / cache.L1.access_count);
 
 	return 0;
 }

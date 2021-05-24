@@ -1,12 +1,12 @@
 [
 {
   "directory": "/home/compm/Desktop/HW/HW2/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-5   -g -o CMakeFiles/CacheSim.dir/cacheSim.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSim.cpp",
-  "file": "/home/compm/Desktop/HW/HW2/cacheSim.cpp"
+  "command": "/usr/bin/x86_64-linux-gnu-g++-5   -g -std=c++11 -o CMakeFiles/CacheSimRoy.dir/cacheSimRoy.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSimRoy.cpp",
+  "file": "/home/compm/Desktop/HW/HW2/cacheSimRoy.cpp"
 },
 {
   "directory": "/home/compm/Desktop/HW/HW2/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-5   -g -std=c++11 -o CMakeFiles/CacheSimNoam.dir/cacheSimNoam.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSimNoam.cpp",
-  "file": "/home/compm/Desktop/HW/HW2/cacheSimNoam.cpp"
+  "command": "/usr/bin/x86_64-linux-gnu-g++-5   -g -o CMakeFiles/CacheSim.dir/cacheSim.cpp.o -c /home/compm/Desktop/HW/HW2/cacheSim.cpp",
+  "file": "/home/compm/Desktop/HW/HW2/cacheSim.cpp"
 }
 ]

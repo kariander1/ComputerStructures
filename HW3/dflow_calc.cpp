@@ -17,7 +17,8 @@ using std::cout;
     } while (0)
 #endif
 
-const int none = -1; 
+const short NUM_OF_REGS = 32;
+const int NONE = -1; 
 struct node
 {
     unsigned int opcode;
@@ -25,7 +26,7 @@ struct node
     int dep2;
     int max_depth;
     unsigned int latency;
-    node() : dep1(none),dep2(none),max_depth(none) {};
+    node() : dep1(NONE),dep2(NONE),max_depth(NONE) {};
 };
 
 class DataFlow
@@ -34,31 +35,38 @@ class DataFlow
 
 public:
     node *dependencies;
-    unsigned int *regs;
+    unsigned int regs[NUM_OF_REGS];
     bool *exit_nodes;
     unsigned int num_of_insts;
-    unsigned int max_depth;
+    int max_depth;
     
 
-    DataFlow(const unsigned int numOfInsts) :   dependencies(new node[numOfInsts]),
-                                                regs(new unsigned int[numOfInsts]),
+    DataFlow(const unsigned int numOfInsts, const unsigned int opsLatency[], const InstInfo progTrace[]) :   
+                                                dependencies(new node[numOfInsts]),                                                
                                                 exit_nodes(new bool[numOfInsts]),
-                                                num_of_insts(numOfInsts)
+                                                num_of_insts(numOfInsts),
+                                                max_depth(NONE)
     {
-        for (unsigned int i = 0; i < numOfInsts; i++)
+        for (unsigned int i = 0; i < NUM_OF_REGS; i++)
         {
-            regs[i] = none;
+             regs[i] = NONE;
+        }
+        
+        for (unsigned int i = 0; i < num_of_insts; i++)
+        {
+           
             exit_nodes[i] = true;
         }
+        InitData(opsLatency,progTrace);
     }
     ~DataFlow()
     {
-        delete[] dependencies;
-        delete[] regs;
+        delete[] dependencies;      
         delete[] exit_nodes;
     }    
     void InitData(const unsigned int opsLatency[], const InstInfo progTrace[])
     {
+        
         
         for (unsigned int i = 0; i < num_of_insts; i++)
         {
@@ -77,19 +85,39 @@ public:
             dependencies[i].dep2 = dependency2;
 
             // Update exit node (by its exit array)
-            exit_nodes[dependency1] = dependency1 == none;
-            exit_nodes[dependency2] = dependency2 == none;
+            if(dependency1!=NONE)
+            {
+                DO_IF_DEBUG(cout << "Node N."<<dependency1 <<" is not from exit" << std::endl;);
+                exit_nodes[dependency1] = false;
+            }
+            if(dependency2!=NONE)
+            {
+                DO_IF_DEBUG(cout << "Node N."<<dependency2 <<" is not from exit" << std::endl;);
+                exit_nodes[dependency2] = false;
+            }
 
-            // Update regs array depedency
+            // Update regs array dependency
             regs[current_inst.dstIdx] = i;
-        }
 
+        }
+                  DO_IF_DEBUG(
+                cout << "Exit nodes are: ";
+                for (unsigned int i = 0; i < num_of_insts; i++)
+                {
+                    if (exit_nodes[i])
+                    {
+                        cout << i << ' ';
+                    }
+                } cout
+                << std::endl;
+
+            );
         // Update max depth for each node (starting from exit nodes)
         for (unsigned int i = 0; i < num_of_insts; i++)
         {
             if(exit_nodes[i])
             {
-                unsigned int max_temp = getDepthRecursive(i);
+                int max_temp = getDepthRecursive(i);
                 max_depth = max_depth > max_temp ? max_depth : max_temp;
             }
         }
@@ -97,12 +125,12 @@ public:
     }
     int getDepthRecursive(const int node_index)
     {
-        if(node_index == none)
+        if(node_index == NONE)
         {
             return 0;
         }
-        node current_node = dependencies[node_index];
-        if(current_node.max_depth !=none)
+        node &current_node = dependencies[node_index];
+        if(current_node.max_depth !=NONE)
         {
             // We've calculated its max_depth
             return current_node.max_depth;
@@ -123,8 +151,7 @@ ProgCtx analyzeProg(const unsigned int opsLatency[], const InstInfo progTrace[],
 {
     //DO_IF_DEBUG(cout<< sizeof(int *););
 
-    ProgCtx data_flow = new DataFlow(numOfInsts);
-
+    ProgCtx data_flow = new DataFlow(numOfInsts,opsLatency,progTrace);
     
     return data_flow;
 }
@@ -137,7 +164,7 @@ void freeProgCtx(ProgCtx ctx)
 int getInstDepth(ProgCtx ctx, unsigned int theInst)
 {
     node inst_node = ((DataFlow *)ctx)->dependencies[theInst];
-    return inst_node.max_depth - inst_node.latency;
+    return inst_node.max_depth == NONE ? 0 : inst_node.max_depth - inst_node.latency;
 }
 
 int getInstDeps(ProgCtx ctx, unsigned int theInst, int *src1DepInst, int *src2DepInst)
