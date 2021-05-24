@@ -17,6 +17,7 @@ using std::cout;
     } while (0)
 #endif
 
+
 const short NUM_OF_REGS = 32;
 const int NONE = -1; 
 struct node
@@ -84,6 +85,7 @@ public:
             dependencies[i].dep1 = dependency1;
             dependencies[i].dep2 = dependency2;
 
+             
             // Update exit node (by its exit array)
             if(dependency1!=NONE)
             {
@@ -149,11 +151,19 @@ public:
 };
 ProgCtx analyzeProg(const unsigned int opsLatency[], const InstInfo progTrace[], unsigned int numOfInsts)
 {
-    //DO_IF_DEBUG(cout<< sizeof(int *););
-
-    ProgCtx data_flow = new DataFlow(numOfInsts,opsLatency,progTrace);
+    ProgCtx data_flow = PROG_CTX_NULL;
+    try
+    {
+        data_flow = new DataFlow(numOfInsts,opsLatency,progTrace);
+    }
+    catch(const std::exception& e)
+    {
+        data_flow   = PROG_CTX_NULL;
+    }
+     return data_flow;
+   
     
-    return data_flow;
+   
 }
 
 void freeProgCtx(ProgCtx ctx)
@@ -163,13 +173,23 @@ void freeProgCtx(ProgCtx ctx)
 
 int getInstDepth(ProgCtx ctx, unsigned int theInst)
 {
-    node inst_node = ((DataFlow *)ctx)->dependencies[theInst];
+    DataFlow* data_flow = (DataFlow *)ctx;
+    if(theInst >=data_flow->num_of_insts )
+    {
+        return NONE;
+    }
+    node inst_node = data_flow->dependencies[theInst];
     return inst_node.max_depth == NONE ? 0 : inst_node.max_depth - inst_node.latency;
 }
 
 int getInstDeps(ProgCtx ctx, unsigned int theInst, int *src1DepInst, int *src2DepInst)
 {
-    node inst_node = ((DataFlow *)ctx)->dependencies[theInst];
+     DataFlow* data_flow = (DataFlow *)ctx;
+    if(theInst >=data_flow->num_of_insts )
+    {
+        return NONE;
+    }
+    node inst_node = data_flow->dependencies[theInst];
     *src1DepInst = inst_node.dep1;
     *src2DepInst = inst_node.dep2;
     return 0;
