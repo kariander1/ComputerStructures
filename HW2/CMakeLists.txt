@@ -8,8 +8,8 @@ list(APPEND flags "-std=c++11")
 
 add_executable(CacheSim cacheSim.cpp)
 add_executable(CacheSimRoy cacheSimRoy.cpp)
-
-target_compile_options(CacheSimRoy
+add_executable(cacheSimShelly cacheSimShelly.cpp)
+target_compile_options(cacheSimShelly
 PRIVATE
   ${flags}
 )

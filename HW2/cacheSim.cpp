@@ -274,7 +274,7 @@ public:
 		if (l1_victim->valid)
 		{
 			// Entry was valid there!!
-			// Need to update L2 with new data
+			// Need to update L2 with new data if dirty
 			WayEntry entry_l2 = L2.blockExists(l1_victim->address);
 			if (l1_victim->dirty)
 			{
@@ -299,8 +299,7 @@ public:
 	{
 		// Fetch block from memory to L2 and L1
 
-		// First fetch the block to L1
-		WayEntry l1_victim = fetchToL1(address);
+		
 
 		// Find a victim/new block to L2:
 		WayEntry l2_victim = L2.getEntryForNewBlock(address);
@@ -328,6 +327,9 @@ public:
 		l2_victim->address = address;
 		l2_victim->dirty = false;
 
+
+		// Fetch the block to L1
+		WayEntry l1_victim = fetchToL1(address);
 		return l1_victim;
 	}
 	// cacheRead: perform a cacheRead operation
@@ -365,11 +367,13 @@ public:
 				// L2 HIT!
 				// This updates L1 with cache line
 				DEBUG(std::cout << "L2 HIT!" << std::endl;);
+				
+				// Hit in L2, we update the LRU
+				requested_entry->last_accessed_time = pseudo_cycle++;
 
 				// There was a HIT in L2, therfore we need to copy the block to L1 as well
 				fetchToL1(address);
-				// Hit in L2, we update the LRU
-				requested_entry->last_accessed_time = pseudo_cycle++;
+				
 			}
 		}
 		else
@@ -421,6 +425,9 @@ public:
 				// This block didn't exist in L1, so no need to perform any updates
 				DEBUG(std::cout << "L2 HIT!" << std::endl;);
 
+				// update LRU
+				requested_entry->last_accessed_time = pseudo_cycle++;
+
 				// If we are in NO_WRITE_ALLOCATE policy then we don't bring the block to L1, therefore L2 is dirty
 				if (write_policy == NO_WRITE_ALLOCATE)
 				{
@@ -431,8 +438,8 @@ public:
 					// Write block to L1 as well
 					fetchToL1(address)->dirty = true;
 				}
-				// update LRU
-				requested_entry->last_accessed_time = pseudo_cycle++;
+				
+				
 			}
 		}
 		else

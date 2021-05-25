@@ -63,6 +63,7 @@ CMAKE_BINARY_DIR = /home/compm/Desktop/HW/HW2/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/cacheSimShelly.dir/all
 all: CMakeFiles/CacheSimRoy.dir/all
 all: CMakeFiles/CacheSim.dir/all
 .PHONY : all
@@ -72,6 +73,7 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/cacheSimShelly.dir/clean
 clean: CMakeFiles/CacheSimRoy.dir/clean
 clean: CMakeFiles/CacheSim.dir/clean
 clean: CMakeFiles/ContinuousSubmit.dir/clean
@@ -103,6 +105,32 @@ clean: CMakeFiles/ExperimentalSubmit.dir/clean
 clean: CMakeFiles/ContinuousStart.dir/clean
 clean: CMakeFiles/ContinuousUpdate.dir/clean
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/cacheSimShelly.dir
+
+# All Build rule for target.
+CMakeFiles/cacheSimShelly.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/compm/Desktop/HW/HW2/build/CMakeFiles --progress-num=5,6 "Built target cacheSimShelly"
+.PHONY : CMakeFiles/cacheSimShelly.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/cacheSimShelly.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/cacheSimShelly.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/compm/Desktop/HW/HW2/build/CMakeFiles 0
+.PHONY : CMakeFiles/cacheSimShelly.dir/rule
+
+# Convenience name for target.
+cacheSimShelly: CMakeFiles/cacheSimShelly.dir/rule
+.PHONY : cacheSimShelly
+
+# clean rule for target.
+CMakeFiles/cacheSimShelly.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/clean
+.PHONY : CMakeFiles/cacheSimShelly.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/CacheSimRoy.dir

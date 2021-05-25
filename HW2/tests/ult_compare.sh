@@ -67,7 +67,8 @@ do
 		fi
 	fi
 	if [ -z "$2" ]; then
-		rm $log_prog_1
+	echo hi
+		#rm $log_prog_1
 	fi
 done
 if [ -f $LOG_NAME ]; then

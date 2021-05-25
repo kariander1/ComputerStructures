@@ -147,6 +147,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named cacheSimShelly
+
+# Build rule for target.
+cacheSimShelly: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cacheSimShelly
+.PHONY : cacheSimShelly
+
+# fast build rule for target.
+cacheSimShelly/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/build
+.PHONY : cacheSimShelly/fast
+
+#=============================================================================
 # Target rules for targets named CacheSimRoy
 
 # Build rule for target.
@@ -584,6 +597,30 @@ cacheSimRoy.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CacheSimRoy.dir/build.make CMakeFiles/CacheSimRoy.dir/cacheSimRoy.cpp.s
 .PHONY : cacheSimRoy.cpp.s
 
+cacheSimShelly.o: cacheSimShelly.cpp.o
+.PHONY : cacheSimShelly.o
+
+# target to build an object file
+cacheSimShelly.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/cacheSimShelly.cpp.o
+.PHONY : cacheSimShelly.cpp.o
+
+cacheSimShelly.i: cacheSimShelly.cpp.i
+.PHONY : cacheSimShelly.i
+
+# target to preprocess a source file
+cacheSimShelly.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/cacheSimShelly.cpp.i
+.PHONY : cacheSimShelly.cpp.i
+
+cacheSimShelly.s: cacheSimShelly.cpp.s
+.PHONY : cacheSimShelly.s
+
+# target to generate assembly for a file
+cacheSimShelly.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cacheSimShelly.dir/build.make CMakeFiles/cacheSimShelly.dir/cacheSimShelly.cpp.s
+.PHONY : cacheSimShelly.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -625,12 +662,16 @@ help:
 	@echo "... NightlyUpdate"
 	@echo "... CacheSim"
 	@echo "... CacheSimRoy"
+	@echo "... cacheSimShelly"
 	@echo "... cacheSim.o"
 	@echo "... cacheSim.i"
 	@echo "... cacheSim.s"
 	@echo "... cacheSimRoy.o"
 	@echo "... cacheSimRoy.i"
 	@echo "... cacheSimRoy.s"
+	@echo "... cacheSimShelly.o"
+	@echo "... cacheSimShelly.i"
+	@echo "... cacheSimShelly.s"
 .PHONY : help
 
 
