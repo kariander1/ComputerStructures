@@ -35,6 +35,8 @@ HW3/.vscode/*
 *.app
 .vscode/*
 build/*
+HW4/build/*
+HW4/.vscode/*
 HW1/shai_tests/*
 HW1/build/*
 HW1/build/CMakeList.txt
