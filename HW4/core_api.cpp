@@ -56,7 +56,7 @@ double CORE_BlockedMT_CPI()
 
 double CORE_FinegrainedMT_CPI()
 {
-	delete[] core.core_threads;
+	delete[] core_finegrained.core_threads;
 	return 0;
 }
 
