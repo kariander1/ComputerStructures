@@ -1,4 +1,4 @@
-/* 046267 Computer Architecture - Spring 2020 - HW #4 */
+/* 046267 Computer1Architecture - Spring 2021 - HW #4 */
 
 #ifndef _SIM_API_H_
 #define _SIM_API_H_
