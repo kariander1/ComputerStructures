@@ -17,11 +17,15 @@ typedef struct _thread
 // Core struct for containing core properties
 typedef struct _core
 {
-	unsigned int num_of_threads;	// Number of threads in SIM
-	unsigned int cycle_count;		// The cycle count of the SIM
-	unsigned int inst_count;		// Instructions retired in the SIM
-	unsigned int rr_index;			// Current Round-Robin index for selecting thread
-	Thread *core_threads;			// Threads array
+	unsigned int num_of_threads;			    // Number of threads in SIM
+	unsigned int cycle_count;				        // The cycle count of the SIM
+	unsigned int inst_count;				        // Instructions retired in the SIM
+	unsigned int rr_index;					        // Current Round-Robin index for selecting thread
+	unsigned int load_latency;				        // latency of load command
+	unsigned int store_latency;				    // latency of store command
+	unsigned int context_switch_overhead;	// cycle overhead when context switching
+	Thread *core_threads;					        // Threads array
+
 } Core;
 
 // Declaration for next usage
@@ -37,6 +41,9 @@ void CORE_init(Core *core)
 	core->cycle_count = 0;
 	core->inst_count = 0;
 	core->rr_index = 0;
+	core->load_latency = SIM_GetLoadLat();
+	core->store_latency = SIM_GetStoreLat();
+	core->context_switch_overhead = SIM_GetSwitchCycles();
 
 	// Get num of threads
 	core->num_of_threads = SIM_GetThreadsNum();
@@ -65,7 +72,7 @@ void CORE_BlockedMT()
 	unsigned int idle_count=0;	
 
 	// Run simulation as long as at least one thread is not halted
-	while (halt_count<core_blocked.num_of_threads)
+	while (halt_count < core_blocked.num_of_threads)
 	{
 		// Get current thread by reference according to Round Robin index
 		Thread &current_thread = core_blocked.core_threads[core_blocked.rr_index];		
@@ -90,8 +97,8 @@ void CORE_BlockedMT()
 				if (core_blocked.cycle_count >= temp_thread.return_cycle)
 				{
 					// Found available thread different from current
-					core_blocked.cycle_count+=SIM_GetSwitchCycles();
-					
+					// Add overhead penalty to cycle count
+					core_blocked.cycle_count += core_blocked.context_switch_overhead;
 					break;
 				}
 				idle_count++;
@@ -102,6 +109,41 @@ void CORE_BlockedMT()
 			}
 			
 		}
+	}
+}
+
+
+void CORE_FinegrainedMT()
+{
+
+	CORE_init(&core_finegrained);
+	unsigned int halt_count=0;
+	unsigned int idle_count=0;
+	// Run simulation as long as at least one thread is not halted
+	while (halt_count<core_finegrained.num_of_threads)
+	{
+		// Get current thread by reference according to Round Robin index
+		Thread &current_thread = core_finegrained.core_threads[core_finegrained.rr_index];
+		if (core_finegrained.cycle_count >= current_thread.return_cycle)
+		{
+			// Execute the instruction fetched
+			EXECUTE_inst(idle_count,halt_count,current_thread,core_finegrained);
+		}
+		else
+		{
+			// The thread is not available, increment idle count
+			idle_count++;
+
+			// If we made a full round-robin cycle, then no threads were availabe. increment cycle
+			if(idle_count >= core_finegrained.num_of_threads)
+			{
+				// Core was idle
+				core_finegrained.cycle_count++;
+				idle_count =0;
+			}
+		}
+		// Increment cyclic Round Robin index
+		core_finegrained.rr_index = (core_finegrained.rr_index + 1) % (core_finegrained.num_of_threads);
 	}
 }
 
@@ -148,7 +190,7 @@ void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &cu
 		SIM_MemDataRead(current_thread.regs.reg[inst.src1_index] + addend, &current_thread.regs.reg[inst.dst_index]);
 
 		// Update thread's return cycle according to LOAD latency
-		current_thread.return_cycle = core.cycle_count + 1 + SIM_GetLoadLat();
+		current_thread.return_cycle = core.cycle_count + 1 + core.load_latency;
 
 		// The thread will be idle after LOAD
 		idle_count++;
@@ -162,7 +204,7 @@ void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &cu
 		SIM_MemDataWrite(current_thread.regs.reg[inst.dst_index] + addend, current_thread.regs.reg[inst.src1_index]);
 
 		// Update thread's return cycle according to LOAD latency
-		current_thread.return_cycle = core.cycle_count + 1 + SIM_GetStoreLat();
+		current_thread.return_cycle = core.cycle_count + 1 + core.store_latency;
 
 		// The thread will be idle after STORE
 		idle_count++;
@@ -182,39 +224,6 @@ void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &cu
 	// Increment cycles and inst. retired
 	core.cycle_count++;
 	core.inst_count++;
-}
-void CORE_FinegrainedMT()
-{
-
-	CORE_init(&core_finegrained);
-	unsigned int halt_count=0;
-	unsigned int idle_count=0;
-	// Run simulation as long as at least one thread is not halted
-	while (halt_count<core_finegrained.num_of_threads)
-	{
-		// Get current thread by reference according to Round Robin index
-		Thread &current_thread = core_finegrained.core_threads[core_finegrained.rr_index];
-		if (core_finegrained.cycle_count >= current_thread.return_cycle)
-		{
-			// Execute the instruction fetched
-			EXECUTE_inst(idle_count,halt_count,current_thread,core_finegrained);
-		}
-		else
-		{
-			// The thread is not available, increment idle count
-			idle_count++;
-
-			// If we made a full round-robin cycle, then no threads were availabe. increment cycle
-			if(idle_count >= core_finegrained.num_of_threads)
-			{
-				// Core was idle
-				core_finegrained.cycle_count++;
-				idle_count =0;
-			}
-		}
-		// Increment cyclic Round Robin index
-		core_finegrained.rr_index = (core_finegrained.rr_index + 1) % (core_finegrained.num_of_threads);
-	}
 }
 
 double CORE_CPI(Core &core)
