@@ -44,7 +44,11 @@ int main(int argc, char const *argv[]){
 		CORE_FinegrainedMT_CTX(finegrained,k);
 	    printf("\nRegister file thread id %d:\n",k);
 	    for (int i = 0; i < REGS_COUNT; ++i)
+		{
+			
 	        printf("\tR%d = 0x%X", i, finegrained[k].reg[i]);
+		}
+		
 	}
 	printf("\nFinegrained Multithreading CPI for this program %lf\n\n", CORE_FinegrainedMT_CPI());
 	SIM_MemFree();
