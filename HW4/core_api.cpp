@@ -5,34 +5,33 @@
 
 #include <stdio.h>
 
-
 // Thread struct for containing thread properties
 typedef struct _thread
 {
-	unsigned int rip;				// Instruction line #
-	unsigned int return_cycle;		// The cycle in which the thread is operational again
-	tcontext regs;					// The register file set for this thread
+	unsigned int rip;		   // Instruction line #
+	unsigned int return_cycle; // The cycle in which the thread is operational again
+	tcontext regs;			   // The register file set for this thread
 } Thread;
 
 // Core struct for containing core properties
 typedef struct _core
 {
-	unsigned int num_of_threads;			    // Number of threads in SIM
-	unsigned int cycle_count;				        // The cycle count of the SIM
-	unsigned int inst_count;				        // Instructions retired in the SIM
-	unsigned int rr_index;					        // Current Round-Robin index for selecting thread
-	unsigned int load_latency;				        // latency of load command
-	unsigned int store_latency;				    // latency of store command
-	unsigned int context_switch_overhead;	// cycle overhead when context switching
-	Thread *core_threads;					        // Threads array
+	unsigned int num_of_threads;		  // Number of threads in SIM
+	unsigned int cycle_count;			  // The cycle count of the SIM
+	unsigned int inst_count;			  // Instructions retired in the SIM
+	unsigned int rr_index;				  // Current Round-Robin index for selecting thread
+	unsigned int load_latency;			  // latency of load command
+	unsigned int store_latency;			  // latency of store command
+	unsigned int context_switch_overhead; // cycle overhead when context switching
+	Thread *core_threads;				  // Threads array
 
 } Core;
 
 // Declaration for next usage
 void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &current_thread, Core &core);
 
-Core core_finegrained;				// Core instance for Fine-Grained multithreading
-Core core_blocked;					// Core instance for Blocked multithreading
+Core core_finegrained; // Core instance for Fine-Grained multithreading
+Core core_blocked;	   // Core instance for Blocked multithreading
 
 // CORE_init - Helper function for initializing core parameters and properties
 void CORE_init(Core *core)
@@ -68,32 +67,31 @@ void CORE_BlockedMT()
 {
 	// Init core:
 	CORE_init(&core_blocked);
-	unsigned int halt_count=0;
-	unsigned int idle_count=0;	
+	unsigned int halt_count = 0;
+	unsigned int idle_count = 0;
 
 	// Run simulation as long as at least one thread is not halted
 	while (halt_count < core_blocked.num_of_threads)
 	{
 		// Get current thread by reference according to Round Robin index
-		Thread &current_thread = core_blocked.core_threads[core_blocked.rr_index];		
+		Thread &current_thread = core_blocked.core_threads[core_blocked.rr_index];
 
 		// If the current thread selected is available
 		if (core_blocked.cycle_count >= current_thread.return_cycle)
-		{			
+		{
 			// Execute the instruction fetched
-			EXECUTE_inst(idle_count,halt_count,current_thread,core_blocked);
-			
+			EXECUTE_inst(idle_count, halt_count, current_thread, core_blocked);
 		}
 		else
 		{
 			// Thread is still working
-			idle_count =0;
+			idle_count = 0;
 
 			// As long as we didn't finish a full Round Robin cycle
-			while (idle_count <core_blocked.num_of_threads)
+			while (idle_count < core_blocked.num_of_threads)
 			{
 				core_blocked.rr_index = (core_blocked.rr_index + 1) % (core_blocked.num_of_threads);
-				Thread &temp_thread = core_blocked.core_threads[core_blocked.rr_index];		
+				Thread &temp_thread = core_blocked.core_threads[core_blocked.rr_index];
 				if (core_blocked.cycle_count >= temp_thread.return_cycle)
 				{
 					// Found available thread different from current
@@ -103,31 +101,29 @@ void CORE_BlockedMT()
 				}
 				idle_count++;
 			}
-			if(idle_count == core_blocked.num_of_threads)
+			if (idle_count == core_blocked.num_of_threads)
 			{
 				core_blocked.cycle_count++;
 			}
-			
 		}
 	}
 }
-
 
 void CORE_FinegrainedMT()
 {
 
 	CORE_init(&core_finegrained);
-	unsigned int halt_count=0;
-	unsigned int idle_count=0;
+	unsigned int halt_count = 0;
+	unsigned int idle_count = 0;
 	// Run simulation as long as at least one thread is not halted
-	while (halt_count<core_finegrained.num_of_threads)
+	while (halt_count < core_finegrained.num_of_threads)
 	{
 		// Get current thread by reference according to Round Robin index
 		Thread &current_thread = core_finegrained.core_threads[core_finegrained.rr_index];
 		if (core_finegrained.cycle_count >= current_thread.return_cycle)
 		{
 			// Execute the instruction fetched
-			EXECUTE_inst(idle_count,halt_count,current_thread,core_finegrained);
+			EXECUTE_inst(idle_count, halt_count, current_thread, core_finegrained);
 		}
 		else
 		{
@@ -135,11 +131,11 @@ void CORE_FinegrainedMT()
 			idle_count++;
 
 			// If we made a full round-robin cycle, then no threads were availabe. increment cycle
-			if(idle_count >= core_finegrained.num_of_threads)
+			if (idle_count >= core_finegrained.num_of_threads)
 			{
 				// Core was idle
 				core_finegrained.cycle_count++;
-				idle_count =0;
+				idle_count = 0;
 			}
 		}
 		// Increment cyclic Round Robin index
@@ -156,7 +152,7 @@ void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &cu
 	// Fetch instruction
 	SIM_MemInstRead(current_thread.rip, &inst, core.rr_index);
 
-	// Increment threads rip 
+	// Increment threads rip
 	current_thread.rip++;
 
 	// Initialize addend for use with LOAD & STORE

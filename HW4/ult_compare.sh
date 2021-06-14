@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 ####################################################################################################
 # C Shai Yehezkel
@@ -36,6 +36,7 @@ prog2_mem_favor=0
 
 touch $VALGRIND_LOG	#In order to suppress output of VALGRIND. Will be deleted
 rm $LOG_NAME 2>/dev/null #Initialze log
+
 
 
 for f in $FILES # Loop over all test files
