@@ -4,6 +4,24 @@
 #include "sim_api.h"
 
 #include <stdio.h>
+#include <iostream>
+
+// Macros used for DEBUG (if compiled with DDEBUG flag)
+#ifdef DEBUG
+#define DO_IF_DEBUG(command) \
+    do                       \
+    {                        \
+        command              \
+    } while (0)
+#else
+#define DO_IF_DEBUG(command)      \
+    do                            \
+    {                             \
+        /* empty intentionally */ \
+    } while (0)
+#endif
+
+
 
 // Thread struct for containing thread properties
 typedef struct _thread
@@ -124,6 +142,9 @@ void CORE_FinegrainedMT()
 		{
 			// Execute the instruction fetched
 			EXECUTE_inst(idle_count, halt_count, current_thread, core_finegrained);
+
+			// Zero idle count again in order to select next thread available, and not the same one in case we were idle
+			idle_count=0;
 		}
 		else
 		{
@@ -217,9 +238,19 @@ void EXECUTE_inst(unsigned int &idle_count, unsigned int &halt_count, Thread &cu
 		break;
 	}
 
+	DO_IF_DEBUG(
+
+		std::cout << "cycle: " << core.cycle_count << " - current thread: " << core.rr_index << " - current inst: " << current_thread.rip-1 << std::endl;
+		std::cout << "op " << inst.opcode << std::endl;
+		
+
+	);
+
 	// Increment cycles and inst. retired
 	core.cycle_count++;
 	core.inst_count++;
+
+
 }
 
 double CORE_CPI(Core &core)
